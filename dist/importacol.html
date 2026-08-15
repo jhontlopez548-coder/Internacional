@@ -1,0 +1,2171 @@
+<title>ImportaCol</title>
+<style>
+/* ============================================================
+   ImportaCol — hoja de estilos
+   ============================================================ */
+
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f0f2f5;
+  --border: #dfe3e9;
+  --text: #16191d;
+  --text-dim: #5c6470;
+  --text-faint: #8b93a0;
+  --accent: #1a5fb4;
+  --accent-soft: #e8f0fb;
+  --gold: #b8860b;
+  --gold-soft: #fdf5e2;
+  --green: #1a7f5a;
+  --green-soft: #e6f4ee;
+  --red: #b3261e;
+  --red-soft: #fbeae9;
+  --shadow: 0 1px 2px rgba(16,24,40,.05), 0 4px 14px rgba(16,24,40,.06);
+  --radius: 12px;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f1216;
+  --surface: #171b21;
+  --surface-2: #1e232b;
+  --border: #2b323c;
+  --text: #e8eaed;
+  --text-dim: #a3abb8;
+  --text-faint: #757e8c;
+  --accent: #6ba3f0;
+  --accent-soft: #16273f;
+  --gold: #d9a441;
+  --gold-soft: #2b2314;
+  --green: #4bbd8e;
+  --green-soft: #122b22;
+  --red: #e8756c;
+  --red-soft: #2e1917;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.25);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1216;
+    --surface: #171b21;
+    --surface-2: #1e232b;
+    --border: #2b323c;
+    --text: #e8eaed;
+    --text-dim: #a3abb8;
+    --text-faint: #757e8c;
+    --accent: #6ba3f0;
+    --accent-soft: #16273f;
+    --gold: #d9a441;
+    --gold-soft: #2b2314;
+    --green: #4bbd8e;
+    --green-soft: #122b22;
+    --red: #e8756c;
+    --red-soft: #2e1917;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.25);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 1.25rem; }
+
+/* ---------- topbar ---------- */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-inner { display: flex; align-items: center; justify-content: space-between; padding-top: .85rem; padding-bottom: .85rem; }
+.brand { display: flex; align-items: center; gap: .7rem; }
+.brand-mark {
+  width: 36px; height: 36px; flex: 0 0 36px;
+  display: grid; place-items: center;
+  border-radius: 9px;
+  background: linear-gradient(140deg, #fcd116 0%, #003893 55%, #ce1126 100%);
+  color: #fff; font-weight: 700; font-size: .78rem; letter-spacing: .02em;
+  text-shadow: 0 1px 2px rgba(0,0,0,.35);
+}
+.brand strong { display: block; font-size: 1.02rem; letter-spacing: -.01em; }
+.brand-sub { display: block; font-size: .78rem; color: var(--text-faint); }
+.theme-toggle {
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--text-dim);
+  width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 1rem;
+}
+.theme-toggle:hover { color: var(--text); }
+
+/* ---------- tabs ---------- */
+.tabs {
+  display: flex; gap: .15rem; overflow-x: auto;
+  scrollbar-width: thin;
+}
+.tab {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  padding: .6rem .8rem; font-size: .875rem; font-family: inherit;
+  color: var(--text-dim); cursor: pointer; white-space: nowrap;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+/* ---------- views ---------- */
+.view { display: none; padding: 2rem 0 1rem; }
+.view.active { display: block; }
+.view-head { max-width: 720px; margin-bottom: 1.5rem; }
+.view-head h1 { font-size: 1.65rem; letter-spacing: -.02em; margin: 0 0 .35rem; }
+.view-head h2 { font-size: 1.3rem; letter-spacing: -.015em; margin: 0 0 .35rem; }
+.view-head p { color: var(--text-dim); margin: 0; }
+
+.layout { display: grid; grid-template-columns: 380px 1fr; gap: 1.5rem; align-items: start; }
+@media (max-width: 940px) { .layout { grid-template-columns: 1fr; } }
+
+/* ---------- panels ---------- */
+.panel {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow);
+}
+.panel h3 { margin: 0 0 1rem; font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; color: var(--text-faint); }
+.form.panel { position: sticky; top: 116px; }
+@media (max-width: 940px) { .form.panel { position: static; } }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 1.1rem 0; }
+
+.field { margin-bottom: .9rem; }
+.field label { display: block; font-size: .8rem; font-weight: 600; margin-bottom: .3rem; color: var(--text-dim); }
+.field input, .field select {
+  width: 100%; padding: .5rem .6rem; font-size: .9rem; font-family: inherit;
+  background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 8px;
+}
+.field input:focus, .field select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.field small { display: block; font-size: .74rem; color: var(--text-faint); margin-top: .25rem; line-height: 1.45; }
+.note-inline { color: var(--text-faint); }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+
+.check { display: flex; gap: .5rem; align-items: flex-start; font-size: .82rem; color: var(--text-dim); margin-bottom: .6rem; cursor: pointer; }
+.check input { margin-top: .25rem; flex: 0 0 auto; accent-color: var(--accent); }
+.check em { font-style: normal; color: var(--accent); font-weight: 600; }
+
+.adv summary { cursor: pointer; font-size: .8rem; font-weight: 600; color: var(--accent); margin-bottom: .8rem; }
+
+/* ---------- resultados ---------- */
+.results { display: grid; gap: 1rem; }
+
+.headline {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.4rem; box-shadow: var(--shadow);
+}
+.headline-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.2rem; }
+.kpi-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-faint); margin-bottom: .2rem; }
+.kpi-value { font-size: 1.5rem; font-weight: 650; letter-spacing: -.025em; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.kpi-value.big { font-size: 1.95rem; }
+.kpi-sub { font-size: .76rem; color: var(--text-faint); margin-top: .15rem; }
+.kpi-value.accent { color: var(--accent); }
+.kpi-value.green { color: var(--green); }
+
+/* ---------- tablas ---------- */
+.tablecard { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.tablecard > h3 { margin: 0; padding: .9rem 1.1rem; font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; color: var(--text-faint); border-bottom: 1px solid var(--border); }
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+th, td { padding: .55rem 1.1rem; text-align: left; border-bottom: 1px solid var(--border); }
+th { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-faint); font-weight: 600; background: var(--surface-2); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: none; }
+tr.total td { font-weight: 700; background: var(--surface-2); }
+tr.sub td { color: var(--text-dim); }
+tr.group td { font-weight: 600; background: var(--surface-2); font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-faint); }
+tr.best { background: var(--green-soft); }
+tr.best td:first-child { box-shadow: inset 3px 0 0 var(--green); }
+.tdesc { color: var(--text-faint); font-size: .78rem; display: block; margin-top: .1rem; }
+
+/* ---------- bars ---------- */
+.bar { height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; display: flex; }
+.bar span { display: block; height: 100%; }
+.bar .b-cif   { background: var(--accent); }
+.bar .b-trib  { background: var(--gold); }
+.bar .b-loc   { background: var(--green); }
+.legend { display: flex; flex-wrap: wrap; gap: 1rem; font-size: .76rem; color: var(--text-dim); margin-top: .6rem; }
+.legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; margin-right: .35rem; }
+
+/* ---------- callouts ---------- */
+.callout { border-radius: 10px; padding: .8rem 1rem; font-size: .855rem; line-height: 1.55; border: 1px solid; }
+/* Solo el primer strong hace de titulo; los demas quedan en linea. */
+.callout > strong:first-child { display: block; margin-bottom: .15rem; }
+.callout.info  { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 25%, transparent); color: var(--text); }
+.callout.warn  { background: var(--gold-soft);  border-color: color-mix(in srgb, var(--gold) 30%, transparent); color: var(--text); }
+.callout.good  { background: var(--green-soft); border-color: color-mix(in srgb, var(--green) 28%, transparent); color: var(--text); }
+.callout.bad   { background: var(--red-soft);   border-color: color-mix(in srgb, var(--red) 28%, transparent); color: var(--text); }
+
+/* ---------- cards ---------- */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem; box-shadow: var(--shadow); }
+.card h4 { margin: 0 0 .35rem; font-size: 1rem; letter-spacing: -.01em; }
+.card p { margin: 0; font-size: .855rem; color: var(--text-dim); }
+
+/* ---------- steps ---------- */
+.steps { display: grid; gap: .85rem; }
+.step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.step-head { display: flex; gap: .85rem; align-items: flex-start; padding: 1rem 1.15rem; cursor: pointer; }
+.step-n {
+  flex: 0 0 30px; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--accent); color: #fff; display: grid; place-items: center;
+  font-weight: 700; font-size: .85rem;
+}
+.step-title { flex: 1; }
+.step-title h4 { margin: 0; font-size: 1rem; letter-spacing: -.01em; }
+.step-meta { font-size: .76rem; color: var(--text-faint); margin-top: .1rem; }
+.step-body { padding: 0 1.15rem 1.15rem 3.15rem; }
+.step-body ul { margin: 0 0 .8rem; padding-left: 1.1rem; }
+.step-body li { font-size: .875rem; margin-bottom: .28rem; color: var(--text-dim); }
+.chev { color: var(--text-faint); font-size: .8rem; transition: transform .15s; }
+.step[open] .chev { transform: rotate(90deg); }
+
+/* ---------- calendar ---------- */
+.calgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: .8rem; }
+.calcard { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 10px; padding: .9rem 1rem; box-shadow: var(--shadow); }
+.calcard.bueno  { border-left-color: var(--green); }
+.calcard.alerta { border-left-color: var(--gold); }
+.calcard.clave  { border-left-color: var(--red); }
+.calcard.neutro { border-left-color: var(--text-faint); }
+.calmes { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--text-faint); font-weight: 700; }
+.calcard h4 { margin: .15rem 0 .3rem; font-size: .93rem; }
+.calcard p { margin: 0; font-size: .82rem; color: var(--text-dim); }
+
+/* ---------- badges ---------- */
+.badge { display: inline-block; font-size: .68rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: .12rem .42rem; border-radius: 5px; vertical-align: middle; }
+.badge.n1    { background: var(--accent-soft); color: var(--accent); }
+.badge.rank  { background: var(--gold-soft); color: var(--gold); }
+.badge.tlc   { background: var(--green-soft); color: var(--green); }
+.badge.notlc { background: var(--surface-2); color: var(--text-faint); }
+.badge.best  { background: var(--green); color: #fff; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 820px) { .grid2 { grid-template-columns: 1fr; } .row { grid-template-columns: 1fr; } }
+
+.stack { display: grid; gap: 1rem; }
+.sec-title { font-size: 1.1rem; margin: 1.8rem 0 .8rem; letter-spacing: -.015em; }
+
+/* ---------- footer ---------- */
+.foot { padding: 2rem 1.25rem 3rem; margin-top: 2rem; border-top: 1px solid var(--border); }
+.foot h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; color: var(--text-faint); margin: 0 0 .6rem; }
+.foot ul { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: .3rem; }
+.foot a { color: var(--accent); text-decoration: none; font-size: .84rem; }
+.foot a:hover { text-decoration: underline; }
+.disclaimer { font-size: .8rem; color: var(--text-faint); line-height: 1.6; max-width: 900px; }
+
+</style>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">CO</span>
+      <div>
+        <strong>ImportaCol</strong>
+        <span class="brand-sub">Comercio exterior Colombia · simulador y guía operativa</span>
+      </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema" aria-label="Cambiar tema">◐</button>
+  </div>
+  <nav class="tabs wrap" id="tabs">
+    <button class="tab active" data-view="simulador">Simulador de costos</button>
+    <button class="tab" data-view="comparador">¿Cuál es más barato?</button>
+    <button class="tab" data-view="origenes">¿De dónde traerlo?</button>
+    <button class="tab" data-view="importar">Cómo importar</button>
+    <button class="tab" data-view="exportar">Cómo exportar</button>
+    <button class="tab" data-view="cuando">Cuándo hacerlo</button>
+    <button class="tab" data-view="agentes">Agentes de aduana</button>
+    <button class="tab" data-view="ahorro">Cómo pagar menos</button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- =============== SIMULADOR =============== -->
+  <section class="view active" id="view-simulador">
+    <div class="view-head">
+      <h1>Simulador de costo desembarcado</h1>
+      <p>Calcula lo que realmente le cuesta poner la mercancía en su bodega en Colombia: valor en aduana, arancel, IVA, gastos portuarios, agenciamiento y transporte interno.</p>
+    </div>
+
+    <div class="layout">
+      <form class="panel form" id="formSim">
+        <h3>Datos de la operación</h3>
+
+        <div class="field">
+          <label for="fob">Valor FOB de la mercancía (USD)</label>
+          <input type="number" id="fob" value="25000" min="0" step="100">
+          <small>Precio de fábrica puesto a bordo, sin flete ni seguro.</small>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="cantidad">Cantidad de unidades</label>
+            <input type="number" id="cantidad" value="1000" min="1" step="1">
+          </div>
+          <div class="field">
+            <label for="trm">TRM (COP por USD)</label>
+            <input type="number" id="trm" value="4050" min="1" step="10">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="pesoKg">Peso bruto total (kg)</label>
+            <input type="number" id="pesoKg" value="4500" min="0" step="10">
+          </div>
+          <div class="field">
+            <label for="volumenCbm">Volumen total (m³ / CBM)</label>
+            <input type="number" id="volumenCbm" value="22" min="0" step="0.5">
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="field">
+          <label for="origenId">País de origen</label>
+          <select id="origenId"></select>
+          <small id="origenNota" class="note-inline"></small>
+        </div>
+
+        <div class="field">
+          <label for="modalidad">Modalidad de transporte</label>
+          <select id="modalidad"></select>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="puertoId">Puerto / punto de entrada</label>
+            <select id="puertoId"></select>
+          </div>
+          <div class="field">
+            <label for="ciudadId">Ciudad de destino final</label>
+            <select id="ciudadId"></select>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="field">
+          <label for="categoriaId">Categoría del producto</label>
+          <select id="categoriaId"></select>
+          <small id="catNota" class="note-inline"></small>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="arancelPct">Arancel (%)</label>
+            <input type="number" id="arancelPct" value="10" min="0" max="100" step="0.5">
+          </div>
+          <div class="field">
+            <label for="ivaPct">IVA (%)</label>
+            <input type="number" id="ivaPct" value="19" min="0" max="100" step="0.5">
+          </div>
+        </div>
+
+        <label class="check" id="tlcWrap">
+          <input type="checkbox" id="aplicaTLC">
+          <span>Aplicar preferencia arancelaria del acuerdo comercial <em id="tlcLabel"></em></span>
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="responsableIva" checked>
+          <span>Soy responsable de IVA (el IVA de la nacionalización es descontable)</span>
+        </label>
+
+        <hr>
+
+        <details class="adv">
+          <summary>Parámetros avanzados</summary>
+          <div class="field">
+            <label for="escenario">Escenario de tarifas</label>
+            <select id="escenario">
+              <option value="bajo">Optimista — extremo bajo del mercado</option>
+              <option value="medio" selected>Realista — promedio de mercado</option>
+              <option value="alto">Conservador — extremo alto del mercado</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="fleteManual">Flete real cotizado (USD)</label>
+              <input type="number" id="fleteManual" placeholder="Dejar vacío para estimar" min="0" step="50">
+            </div>
+            <div class="field">
+              <label for="seguroPct">Seguro (% sobre FOB+flete)</label>
+              <input type="number" id="seguroPct" value="0.5" min="0" step="0.05">
+            </div>
+          </div>
+          <div class="field">
+            <label for="diasAlmacenaje">Días totales en puerto antes de retirar</label>
+            <input type="number" id="diasAlmacenaje" value="7" min="0" step="1">
+            <small>Los primeros días son libres. Solo se cobra el exceso.</small>
+          </div>
+        </details>
+      </form>
+
+      <div class="results" id="resultados"></div>
+    </div>
+  </section>
+
+  <!-- =============== COMPARADOR MODALIDADES =============== -->
+  <section class="view" id="view-comparador">
+    <div class="view-head">
+      <h1>¿Cuál es la forma más barata de traerla?</h1>
+      <p>Toma los datos que cargó en el simulador y corre el mismo embarque por courier, aéreo, consolidado marítimo y contenedor completo. Lo ordena de más barato a más caro.</p>
+    </div>
+    <div id="comparadorOut"></div>
+  </section>
+
+  <!-- =============== COMPARADOR ORIGENES =============== -->
+  <section class="view" id="view-origenes">
+    <div class="view-head">
+      <h1>¿De qué país conviene traerla?</h1>
+      <p>Mismo producto, mismo volumen, distintos orígenes. Aquí es donde se ve el efecto real de los acuerdos comerciales: un arancel eliminado puede compensar un precio de fábrica más alto.</p>
+    </div>
+    <div id="origenesOut"></div>
+  </section>
+
+  <!-- =============== IMPORTAR =============== -->
+  <section class="view" id="view-importar">
+    <div class="view-head">
+      <h1>Cómo importar a Colombia, paso a paso</h1>
+      <p>El recorrido completo desde el registro ante la DIAN hasta el cierre del expediente, con los plazos reales de cada etapa.</p>
+    </div>
+    <div id="importarOut"></div>
+  </section>
+
+  <!-- =============== EXPORTAR =============== -->
+  <section class="view" id="view-exportar">
+    <div class="view-head">
+      <h1>Cómo exportar desde Colombia, paso a paso</h1>
+      <p>Trámite ante DIAN y VUCE, certificado de origen, SAE y DEX, reintegro de divisas y los beneficios tributarios que le corresponden como exportador.</p>
+    </div>
+    <div id="exportarOut"></div>
+
+    <div class="view-head" style="margin-top:2.5rem">
+      <h2>Calculadora de precio de exportación</h2>
+      <p>Construye el precio FOB y CIF a partir de su costo de producción, para que cotice sin dejar costos por fuera.</p>
+    </div>
+    <div class="layout">
+      <form class="panel form" id="formExp">
+        <h3>Estructura de costos</h3>
+        <div class="row">
+          <div class="field"><label for="e_costo">Costo total del producto (USD)</label><input type="number" id="e_costo" value="12000" step="100"></div>
+          <div class="field"><label for="e_cant">Unidades</label><input type="number" id="e_cant" value="500" step="1"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="e_margen">Margen deseado (%)</label><input type="number" id="e_margen" value="28" step="1"></div>
+          <div class="field"><label for="e_empaque">Empaque de exportación (USD)</label><input type="number" id="e_empaque" value="600" step="50"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="e_transp">Transporte interno a puerto (USD)</label><input type="number" id="e_transp" value="700" step="50"></div>
+          <div class="field"><label for="e_puerto">Gastos portuarios origen (USD)</label><input type="number" id="e_puerto" value="380" step="20"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="e_agencia">Agenciamiento aduanero (USD)</label><input type="number" id="e_agencia" value="250" step="20"></div>
+          <div class="field"><label for="e_cert">Certificados y vistos buenos (USD)</label><input type="number" id="e_cert" value="150" step="10"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="e_flete">Flete internacional (USD)</label><input type="number" id="e_flete" value="2200" step="50"></div>
+          <div class="field"><label for="e_seguro">Seguro (%)</label><input type="number" id="e_seguro" value="0.4" step="0.05"></div>
+        </div>
+        <div class="field"><label for="e_fin">Costo financiero y bancario (%)</label><input type="number" id="e_fin" value="1.5" step="0.1"></div>
+      </form>
+      <div class="results" id="expResultados"></div>
+    </div>
+  </section>
+
+  <!-- =============== CUANDO =============== -->
+  <section class="view" id="view-cuando">
+    <div class="view-head">
+      <h1>Cuándo comprar y cuándo embarcar</h1>
+      <p>El calendario del comercio exterior. Comprar el mismo contenedor en marzo o en septiembre puede cambiar el flete en más de un 40%.</p>
+    </div>
+    <div id="cuandoOut"></div>
+  </section>
+
+  <!-- =============== AGENTES =============== -->
+  <section class="view" id="view-agentes">
+    <div class="view-head">
+      <h1>Agencias de aduana y operadores logísticos</h1>
+      <p>Quién es quién en el mercado colombiano, cómo elegir y qué señales indican que debe alejarse.</p>
+    </div>
+    <div id="agentesOut"></div>
+  </section>
+
+  <!-- =============== AHORRO =============== -->
+  <section class="view" id="view-ahorro">
+    <div class="view-head">
+      <h1>Catorce formas de bajar el costo de su importación</h1>
+      <p>Ordenadas por lo que realmente mueven la aguja. La primera columna es el ahorro típico sobre la operación.</p>
+    </div>
+    <div id="ahorroOut"></div>
+  </section>
+
+</main>
+
+<footer class="foot wrap">
+  <div id="fuentesOut"></div>
+  <p class="disclaimer"><strong>Aviso.</strong> Las cifras de esta herramienta son rangos referenciales de mercado a 2026 y sirven para presupuestar y comparar alternativas. No constituyen una cotización en firme ni asesoría legal o tributaria. Antes de cerrar una operación confirme la subpartida arancelaria, los vistos buenos y las tarifas vigentes con la DIAN, la VUCE y su agencia de aduanas.</p>
+</footer>
+<script>
+/* ============================================================================
+   DATOS DE REFERENCIA — Comercio Exterior Colombia
+   ----------------------------------------------------------------------------
+   Todas las cifras son RANGOS REFERENCIALES DE MERCADO (actualizados a 2026).
+   No sustituyen una cotizacion en firme ni el Arancel de Aduanas de la DIAN.
+   Verifique siempre: partida arancelaria, vistos buenos y tarifas vigentes.
+   ========================================================================== */
+
+const DATA = {};
+
+/* ---------------------------------------------------------------------------
+   1. ORIGENES: fletes, transitos y acuerdos comerciales
+   Rangos USD. FCL = contenedor completo. LCL = carga suelta consolidada (por CBM).
+   Aereo = USD por kilo tasable. Courier = USD por kilo.
+--------------------------------------------------------------------------- */
+DATA.origenes = [
+  {
+    id: 'china',
+    nombre: 'China',
+    puertosOrigen: 'Shanghai, Ningbo, Shenzhen, Qingdao, Guangzhou',
+    destinoNatural: 'buenaventura',
+    fcl20: [1800, 3500],
+    fcl40: [2500, 5500],
+    fcl40hc: [2700, 5800],
+    lclCbm: [65, 120],
+    lclMinCbm: 1,
+    aereoKg: [4.5, 7.0],
+    courierKg: [7.0, 12.0],
+    transito: { maritimo: [30, 42], aereo: [6, 10] },
+    tlc: null,
+    arancelPref: null,
+    nota: 'Sin TLC con Colombia: paga arancel NMF pleno. Vigilar derechos antidumping (calzado, textiles, acero, vidrio, tornillería).'
+  },
+  {
+    id: 'usa',
+    nombre: 'Estados Unidos',
+    puertosOrigen: 'Miami, Houston, Savannah, Nueva York, Los Ángeles',
+    destinoNatural: 'cartagena',
+    fcl20: [1200, 2200],
+    fcl40: [1600, 2900],
+    fcl40hc: [1750, 3100],
+    lclCbm: [45, 85],
+    lclMinCbm: 1,
+    aereoKg: [1.8, 3.5],
+    courierKg: [4.5, 8.5],
+    transito: { maritimo: [6, 12], aereo: [2, 4] },
+    tlc: 'TLC Colombia - EE.UU. (vigente desde 2012)',
+    arancelPref: 0,
+    nota: 'La gran mayoría del universo arancelario está en 0% con Certificado de Origen. Es el origen más barato en tributos + flete corto.'
+  },
+  {
+    id: 'europa',
+    nombre: 'Unión Europea',
+    puertosOrigen: 'Rotterdam, Amberes, Hamburgo, Valencia, Barcelona, Génova',
+    destinoNatural: 'cartagena',
+    fcl20: [1600, 3000],
+    fcl40: [2200, 4200],
+    fcl40hc: [2350, 4500],
+    lclCbm: [60, 110],
+    lclMinCbm: 1,
+    aereoKg: [3.5, 6.0],
+    courierKg: [6.5, 11.0],
+    transito: { maritimo: [18, 30], aereo: [4, 7] },
+    tlc: 'Acuerdo Comercial Colombia - UE (vigente desde 2013)',
+    arancelPref: 0,
+    nota: 'Desgravación casi total ya cumplida. Requiere declaración de origen en factura (exportador registrado REX).'
+  },
+  {
+    id: 'mexico',
+    nombre: 'México',
+    puertosOrigen: 'Manzanillo, Veracruz, Altamira, Lázaro Cárdenas',
+    destinoNatural: 'cartagena',
+    fcl20: [1300, 2400],
+    fcl40: [1800, 3200],
+    fcl40hc: [1950, 3400],
+    lclCbm: [55, 95],
+    lclMinCbm: 1,
+    aereoKg: [2.5, 4.5],
+    courierKg: [5.5, 9.5],
+    transito: { maritimo: [8, 16], aereo: [2, 5] },
+    tlc: 'TLC Colombia - México + Alianza del Pacífico',
+    arancelPref: 0,
+    nota: 'Doble vía de preferencia: puede elegir el acuerdo que más le convenga según la regla de origen del producto.'
+  },
+  {
+    id: 'brasil',
+    nombre: 'Brasil / Mercosur',
+    puertosOrigen: 'Santos, Paranaguá, Itajaí, Río Grande',
+    destinoNatural: 'cartagena',
+    fcl20: [1400, 2600],
+    fcl40: [1900, 3400],
+    fcl40hc: [2050, 3600],
+    lclCbm: [55, 100],
+    lclMinCbm: 1,
+    aereoKg: [2.8, 5.0],
+    courierKg: [6.0, 10.0],
+    transito: { maritimo: [12, 22], aereo: [3, 6] },
+    tlc: 'ACE 59 Colombia - Mercosur',
+    arancelPref: 0,
+    nota: 'Desgravación completada para la mayoría de líneas. Certificado de origen ACE 59 obligatorio.'
+  },
+  {
+    id: 'can',
+    nombre: 'Perú / Ecuador / Bolivia (CAN)',
+    puertosOrigen: 'Callao, Guayaquil, Paita; o vía terrestre Ipiales / Rumichaca',
+    destinoNatural: 'buenaventura',
+    fcl20: [900, 1800],
+    fcl40: [1200, 2400],
+    fcl40hc: [1300, 2600],
+    lclCbm: [40, 80],
+    lclMinCbm: 1,
+    aereoKg: [1.5, 3.0],
+    courierKg: [4.0, 7.5],
+    transito: { maritimo: [4, 10], aereo: [1, 3] },
+    tlc: 'Comunidad Andina — Zona de Libre Comercio',
+    arancelPref: 0,
+    nota: 'Arancel 0% pleno entre países CAN. Ecuador y Perú admiten transporte terrestre internacional (CRT), suele ser lo más económico de la región.'
+  },
+  {
+    id: 'chile',
+    nombre: 'Chile',
+    puertosOrigen: 'San Antonio, Valparaíso',
+    destinoNatural: 'buenaventura',
+    fcl20: [1000, 2000],
+    fcl40: [1400, 2700],
+    fcl40hc: [1500, 2900],
+    lclCbm: [45, 85],
+    lclMinCbm: 1,
+    aereoKg: [1.8, 3.4],
+    courierKg: [4.5, 8.0],
+    transito: { maritimo: [7, 14], aereo: [2, 4] },
+    tlc: 'TLC Colombia - Chile (ACE 24) + Alianza del Pacífico',
+    arancelPref: 0,
+    nota: 'Arancel 0% en prácticamente todo el universo arancelario.'
+  },
+  {
+    id: 'panama',
+    nombre: 'Panamá (Zona Libre de Colón)',
+    puertosOrigen: 'Colón, Balboa, Manzanillo',
+    destinoNatural: 'cartagena',
+    fcl20: [700, 1400],
+    fcl40: [900, 1900],
+    fcl40hc: [1000, 2050],
+    lclCbm: [35, 75],
+    lclMinCbm: 1,
+    aereoKg: [1.2, 2.6],
+    courierKg: [3.5, 6.5],
+    transito: { maritimo: [3, 7], aereo: [1, 2] },
+    tlc: null,
+    arancelPref: null,
+    nota: 'Flete baratísimo y rápido, PERO la mercancía reexportada desde Zona Libre conserva el origen del fabricante (normalmente China): no genera preferencia y el arancel se paga completo. Útil para lotes pequeños y reposición rápida de inventario.'
+  },
+  {
+    id: 'india',
+    nombre: 'India',
+    puertosOrigen: 'Nhava Sheva, Mundra, Chennai',
+    destinoNatural: 'cartagena',
+    fcl20: [1900, 3600],
+    fcl40: [2600, 5200],
+    fcl40hc: [2800, 5500],
+    lclCbm: [70, 125],
+    lclMinCbm: 1,
+    aereoKg: [4.0, 7.0],
+    courierKg: [7.5, 12.5],
+    transito: { maritimo: [32, 45], aereo: [6, 10] },
+    tlc: null,
+    arancelPref: null,
+    nota: 'Sin TLC. Competitivo en químicos, farma genérica, textiles y autopartes. Tránsito largo: planifique inventario de seguridad.'
+  },
+  {
+    id: 'turquia',
+    nombre: 'Turquía',
+    puertosOrigen: 'Estambul (Ambarli), Mersin, Izmir',
+    destinoNatural: 'cartagena',
+    fcl20: [1800, 3200],
+    fcl40: [2400, 4600],
+    fcl40hc: [2550, 4850],
+    lclCbm: [65, 115],
+    lclMinCbm: 1,
+    aereoKg: [3.8, 6.5],
+    courierKg: [7.0, 11.5],
+    transito: { maritimo: [25, 36], aereo: [5, 9] },
+    tlc: null,
+    arancelPref: null,
+    nota: 'Sin TLC. Fuerte en textil, mármol, maquinaria y alimentos. Ojo con la salvaguardia del 35% al acero (Decreto 0264 de 2026).'
+  },
+  {
+    id: 'corea',
+    nombre: 'Corea del Sur',
+    puertosOrigen: 'Busan, Incheon',
+    destinoNatural: 'buenaventura',
+    fcl20: [1900, 3600],
+    fcl40: [2600, 5400],
+    fcl40hc: [2800, 5700],
+    lclCbm: [68, 122],
+    lclMinCbm: 1,
+    aereoKg: [4.2, 7.2],
+    courierKg: [7.5, 12.0],
+    transito: { maritimo: [30, 42], aereo: [6, 10] },
+    tlc: 'TLC Colombia - Corea (vigente desde 2016)',
+    arancelPref: 0,
+    nota: 'Alternativa con arancel preferencial frente a China para electrónica, autopartes y químicos. Compare siempre el ahorro arancelario contra el mayor precio FOB.'
+  },
+  {
+    id: 'asiaSur',
+    nombre: 'Vietnam / Tailandia / Indonesia',
+    puertosOrigen: 'Ho Chi Minh, Haiphong, Laem Chabang, Yakarta',
+    destinoNatural: 'buenaventura',
+    fcl20: [2000, 3800],
+    fcl40: [2800, 5700],
+    fcl40hc: [3000, 6000],
+    lclCbm: [70, 128],
+    lclMinCbm: 1,
+    aereoKg: [4.5, 7.5],
+    courierKg: [8.0, 13.0],
+    transito: { maritimo: [33, 46], aereo: [7, 11] },
+    tlc: null,
+    arancelPref: null,
+    nota: 'Sin TLC. Se ha vuelto la alternativa a China por costo de mano de obra, sobre todo en calzado, muebles y confección.'
+  }
+];
+
+/* ---------------------------------------------------------------------------
+   2. PUERTOS Y PASOS DE ENTRADA A COLOMBIA
+--------------------------------------------------------------------------- */
+DATA.puertos = [
+  {
+    id: 'buenaventura',
+    nombre: 'Buenaventura (Pacífico)',
+    operadores: 'Sociedad Portuaria de Buenaventura (SPRBUN), TCBUEN',
+    gastosFcl: [420, 700],
+    gastosLcl: [55, 120],
+    diasLibres: 5,
+    almacenajeDia: [22, 45],
+    fleteInterno: { bogota: [900, 1600], medellin: [700, 1300], cali: [230, 430], barranquilla: [1500, 2400], bucaramanga: [1200, 1900] },
+    fuerte: 'Puerta natural de Asia (China, Corea, Vietnam). Mueve cerca de la mitad de la carga contenerizada del país.',
+    ojo: 'Congestión en temporada alta y riesgo de orden público en el corredor vial. Sume días de colchón.'
+  },
+  {
+    id: 'cartagena',
+    nombre: 'Cartagena (Caribe)',
+    operadores: 'SPRC / CONTECAR (Puerto de Cartagena)',
+    gastosFcl: [400, 680],
+    gastosLcl: [50, 115],
+    diasLibres: 5,
+    almacenajeDia: [20, 42],
+    fleteInterno: { bogota: [800, 1500], medellin: [750, 1350], cali: [1000, 1700], barranquilla: [180, 340], bucaramanga: [650, 1150] },
+    fuerte: 'El puerto más eficiente del país y hub de trasbordo del Caribe. Mejor para EE.UU., Europa, México y Brasil.',
+    ojo: 'Tarifas reguladas actualizadas en 2026. Es el que mejor cumple ventanas de atención.'
+  },
+  {
+    id: 'barranquilla',
+    nombre: 'Barranquilla (Caribe / fluvial)',
+    operadores: 'Sociedad Portuaria Regional de Barranquilla',
+    gastosFcl: [380, 660],
+    gastosLcl: [50, 110],
+    diasLibres: 5,
+    almacenajeDia: [18, 40],
+    fleteInterno: { bogota: [800, 1450], medellin: [700, 1250], cali: [1000, 1650], barranquilla: [60, 150], bucaramanga: [500, 950] },
+    fuerte: 'Buena opción para granel, carga suelta y proyecto. Costos locales algo más bajos.',
+    ojo: 'Calado limitado por sedimentación del río Magdalena: no todos los buques grandes recalan.'
+  },
+  {
+    id: 'santamarta',
+    nombre: 'Santa Marta (Caribe)',
+    operadores: 'Sociedad Portuaria de Santa Marta',
+    gastosFcl: [380, 650],
+    gastosLcl: [48, 108],
+    diasLibres: 5,
+    almacenajeDia: [18, 38],
+    fleteInterno: { bogota: [850, 1550], medellin: [780, 1400], cali: [1050, 1750], barranquilla: [150, 300], bucaramanga: [600, 1050] },
+    fuerte: 'Puerto de aguas profundas, sin restricción de calado. Fuerte en refrigerados y granel.',
+    ojo: 'Menor frecuencia de recaladas que Cartagena en algunos servicios.'
+  },
+  {
+    id: 'bogota_aereo',
+    nombre: 'Bogotá — Aeropuerto El Dorado (aéreo)',
+    operadores: 'OPAIN / depósitos aduaneros aeroportuarios',
+    gastosFcl: [0, 0],
+    gastosLcl: [0, 0],
+    gastosAereoFijo: [120, 320],
+    diasLibres: 2,
+    almacenajeDia: [0.35, 0.9],
+    almacenajeUnidad: 'USD por kilo por día',
+    fleteInterno: { bogota: [60, 160], medellin: [420, 780], cali: [450, 820], barranquilla: [800, 1400], bucaramanga: [380, 700] },
+    fuerte: 'El principal aeropuerto de carga de América Latina. Levante en horas si la documentación está perfecta.',
+    ojo: 'El almacenaje aéreo se cobra por kilo/día y escala muy rápido. Tenga la declaración lista antes de que aterrice.'
+  }
+];
+
+/* ---------------------------------------------------------------------------
+   3. ARANCELES TIPICOS POR CATEGORIA (referencial — confirmar partida en DIAN)
+--------------------------------------------------------------------------- */
+DATA.categorias = [
+  { id: 'bienesCapital', nombre: 'Maquinaria y bienes de capital', arancel: 0, iva: 19, capitulos: '84, 85', nota: 'Gran parte de la maquinaria industrial no producida en el país está en 0%.' },
+  { id: 'materiaPrima', nombre: 'Materias primas industriales no producidas', arancel: 0, iva: 19, capitulos: '28-39', nota: 'Verifique si su insumo tiene producción nacional: eso cambia el arancel.' },
+  { id: 'electronica', nombre: 'Electrónica, computadores y celulares', arancel: 5, iva: 19, capitulos: '84.71, 85.17, 85.28', nota: 'Computadores y celulares suelen estar en 0-5%.' },
+  { id: 'quimicos', nombre: 'Químicos e insumos', arancel: 5, iva: 19, capitulos: '28-38', nota: 'Algunos requieren visto bueno de Justicia/INDUMIL (precursores).' },
+  { id: 'autopartes', nombre: 'Autopartes y repuestos', arancel: 10, iva: 19, capitulos: '87.08', nota: 'Rango 5%-15% según la pieza.' },
+  { id: 'herramientas', nombre: 'Herramientas y ferretería', arancel: 10, iva: 19, capitulos: '82, 73', nota: 'Ojo con antidumping en tornillería de origen chino.' },
+  { id: 'electrodomesticos', nombre: 'Electrodomésticos', arancel: 15, iva: 19, capitulos: '84.18, 85.16', nota: 'Requiere Reglamento Técnico de etiquetado energético (RETIQ) y RETIE cuando aplica.' },
+  { id: 'plasticos', nombre: 'Manufacturas de plástico', arancel: 10, iva: 19, capitulos: '39', nota: '' },
+  { id: 'textiles', nombre: 'Textiles y confecciones', arancel: 15, iva: 19, capitulos: '50-63', nota: 'Régimen de arancel MIXTO: porcentaje + USD por kilo. Uno de los sectores más fiscalizados y con mayor riesgo de duda de valor.' },
+  { id: 'calzado', nombre: 'Calzado', arancel: 15, iva: 19, capitulos: '64', nota: 'Arancel mixto (porcentaje + USD por par) y antidumping vigente para varios orígenes asiáticos.' },
+  { id: 'juguetes', nombre: 'Juguetes y artículos deportivos', arancel: 10, iva: 19, capitulos: '95', nota: 'Exige certificado de conformidad de seguridad para juguetes.' },
+  { id: 'muebles', nombre: 'Muebles y decoración', arancel: 15, iva: 19, capitulos: '94', nota: 'La madera puede requerir permiso ambiental / CITES.' },
+  { id: 'cosmeticos', nombre: 'Cosméticos y aseo', arancel: 10, iva: 19, capitulos: '33, 34', nota: 'Notificación Sanitaria Obligatoria del INVIMA ANTES de importar.' },
+  { id: 'alimentos', nombre: 'Alimentos procesados', arancel: 15, iva: 19, capitulos: '16-22', nota: 'Registro sanitario INVIMA + visto bueno. Algunos IVA 5% o excluidos.' },
+  { id: 'agricolas', nombre: 'Agrícolas sensibles (SAFP)', arancel: 20, iva: 5, capitulos: '02, 04, 10, 12, 15, 17', nota: 'Sistema Andino de Franjas de Precios: el arancel VARÍA cada quincena. Consulte la franja vigente antes de comprar.' },
+  { id: 'medicamentos', nombre: 'Medicamentos y dispositivos médicos', arancel: 0, iva: 0, capitulos: '30, 90.18', nota: 'Muchos excluidos de IVA. Registro sanitario INVIMA obligatorio.' },
+  { id: 'acero', nombre: 'Acero y productos siderúrgicos', arancel: 10, iva: 19, capitulos: '72, 73', nota: 'ATENCIÓN: Decreto 0264 de 2026 fijo arancel del 35% al acero originario de China, Rusia, India y Turquía.' },
+  { id: 'llantas', nombre: 'Llantas y neumáticos', arancel: 15, iva: 19, capitulos: '40.11', nota: 'Reglamento técnico y etiquetado obligatorio.' },
+  { id: 'vehiculos', nombre: 'Vehículos y motocicletas', arancel: 35, iva: 19, capitulos: '87', nota: 'Además del arancel: impuesto al consumo del 8% o 16% según cilindraje y valor.' },
+  { id: 'otros', nombre: 'Otros / arancel a la medida', arancel: 10, iva: 19, capitulos: '—', nota: 'Escriba manualmente el arancel de su partida.' }
+];
+
+/* ---------------------------------------------------------------------------
+   4. MODALIDADES DE TRANSPORTE
+--------------------------------------------------------------------------- */
+DATA.modalidades = [
+  { id: 'courier', nombre: 'Courier / Tráfico postal', rango: 'Hasta 50 kg y USD 2.000 por envío', mejorPara: 'Muestras, repuestos urgentes, primeros pedidos de prueba, e-commerce.' },
+  { id: 'aereo', nombre: 'Aéreo (carga general)', rango: 'Desde 45 kg tasables', mejorPara: 'Alto valor / bajo peso, moda de temporada, electrónica, urgencias.' },
+  { id: 'lcl', nombre: 'Marítimo LCL (consolidado)', rango: '1 a 13 CBM aprox.', mejorPara: 'Volúmenes medianos sin llenar contenedor. El caballo de batalla del importador que arranca.' },
+  { id: 'fcl20', nombre: 'Marítimo FCL 20 pies', rango: 'Hasta 28 CBM / 28 ton', mejorPara: 'Carga pesada y densa (ferretería, químicos, cerámica).' },
+  { id: 'fcl40', nombre: 'Marítimo FCL 40 pies', rango: 'Hasta 58 CBM / 26 ton', mejorPara: 'Carga voluminosa y liviana (muebles, plásticos, empaques).' },
+  { id: 'fcl40hc', nombre: 'Marítimo FCL 40 High Cube', rango: 'Hasta 68 CBM / 26 ton', mejorPara: 'Máximo volumen por dolar de flete. La mejor relación USD/CBM del mercado.' }
+];
+
+/* ---------------------------------------------------------------------------
+   5. AGENCIAS DE ADUANAS Y OPERADORES LOGISTICOS
+   Ranking referencial 2026 (La Nota Economica). Verifique SIEMPRE la
+   habilitacion vigente en el RUT aduanero de la DIAN antes de contratar.
+--------------------------------------------------------------------------- */
+DATA.agencias = [
+  { nombre: 'Agencia de Aduanas Siaco', nivel: 1, rank: 1, tipo: 'Agencia de aduanas', fuerte: 'Líder histórico del ranking nacional. Alto volumen de declaraciones y músculo operativo en todos los puertos.', perfil: 'Importador mediano y grande, operación recurrente.' },
+  { nombre: 'Agencia de Aduanas ML', nivel: 1, rank: 2, tipo: 'Agencia de aduanas', fuerte: 'Segundo lugar sostenido. Muy fuerte en carga industrial y proyectos.', perfil: 'Manufactura, bienes de capital.' },
+  { nombre: 'Agencia de Aduanas Hubemar', nivel: 1, rank: 3, tipo: 'Agencia de aduanas', fuerte: 'Mayor ascenso del ranking reciente. Servicio ágil y buena atención en Cartagena.', perfil: 'Importador que valora respuesta rápida.' },
+  { nombre: 'Agencia de Aduanas DHL Express Colombia', nivel: 1, rank: 4, tipo: 'Courier + agencia', fuerte: 'Integración total courier-aduana. Imbatible en envíos pequeños y urgentes.', perfil: 'Muestras, e-commerce, repuestos.' },
+  { nombre: 'Agencia de Aduanas DHL Global Forwarding', nivel: 1, rank: 4, tipo: 'Forwarder + agencia', fuerte: 'Red mundial propia: un solo interlocutor de fábrica a bodega.', perfil: 'Quien quiere puerta a puerta sin coordinar tres proveedores.' },
+  { nombre: 'Agencia de Aduanas Agecoldex', nivel: 1, rank: 5, tipo: 'Agencia de aduanas', fuerte: 'Amplia cobertura nacional y experiencia en regímenes especiales.', perfil: 'Zonas francas, Plan Vallejo.' },
+  { nombre: 'Agencia de Aduanas Aviatur', nivel: 1, rank: 6, tipo: 'Agencia de aduanas', fuerte: 'Respaldo de grupo empresarial grande. Solidez y cumplimiento.', perfil: 'Corporativo, carga aérea.' },
+  { nombre: 'Agencia de Aduanas Profesional', nivel: 1, rank: 7, tipo: 'Agencia de aduanas', fuerte: 'Buen manejo de clasificación arancelaria compleja.', perfil: 'Productos de difícil clasificación.' },
+  { nombre: 'Agencia de Aduanas Aduanimex', nivel: 1, rank: 8, tipo: 'Agencia de aduanas', fuerte: 'Trayectoria larga, tarifas competitivas.', perfil: 'PYME importadora.' },
+  { nombre: 'Agencia de Aduanas Roldan', nivel: 1, rank: 9, tipo: 'Operador logístico integral', fuerte: 'Ofrece aduana + almacenamiento + distribución nacional en un solo contrato.', perfil: 'Quien necesita la cadena completa hasta el cliente final.' },
+  { nombre: 'Agencia de Aduanas Siacomex', nivel: 1, rank: 10, tipo: 'Agencia de aduanas', fuerte: 'Presencia fuerte en Buenaventura.', perfil: 'Importación desde Asia.' },
+  { nombre: 'Agencia de Aduanas TCC', nivel: 1, rank: 11, tipo: 'Operador logístico integral', fuerte: 'Se apalanca en la red de distribución nacional de TCC.', perfil: 'Distribución capilar a muchas ciudades.' },
+  { nombre: 'Agencia de Aduanas ABC Repecev', nivel: 1, rank: 12, tipo: 'Agencia de aduanas', fuerte: 'Certificada OEA. Más de 450 colaboradores y 11 oficinas en puertos y fronteras.', perfil: 'Operaciones que necesitan beneficios OEA y cobertura fronteriza.' },
+  { nombre: 'Aduanas Gama', nivel: 1, rank: null, tipo: 'Agencia de aduanas', fuerte: 'Más de 40 años en el mercado. Perfil de servicio cercano.', perfil: 'Importador que quiere trato personalizado.' },
+  { nombre: 'Colombiana de Aduanas', nivel: 1, rank: null, tipo: 'Agencia de aduanas', fuerte: 'Más de 30 años de experiencia sectorial.', perfil: 'Operación tradicional establecida.' },
+  { nombre: 'Kuehne + Nagel Colombia', nivel: 1, rank: null, tipo: 'Forwarder global', fuerte: 'Tarifas de flete muy competitivas por volumen global, sobre todo marítimo.', perfil: 'Volumen alto y recurrente.' },
+  { nombre: 'DSV Colombia', nivel: 1, rank: null, tipo: 'Forwarder global', fuerte: 'Red global tras la integración con Panalpina y Schenker.', perfil: 'Corporativo multinacional.' },
+  { nombre: 'Blu Logistics Colombia', nivel: null, rank: null, tipo: 'Forwarder regional', fuerte: 'Origen colombiano con red propia en Latinoamérica y Asia. Buena consolidación LCL.', perfil: 'PYME que importa LCL desde China.' },
+  { nombre: 'Open Market / Aeronet', nivel: null, rank: null, tipo: 'Forwarder', fuerte: 'Consolidados frecuentes desde Miami y Asia.', perfil: 'Carga suelta recurrente.' },
+  { nombre: 'Almaviva / Almagran', nivel: null, rank: null, tipo: 'Depósito y logística', fuerte: 'Depósitos aduaneros propios: útil para diferir nacionalización y pagar tributos por partes.', perfil: 'Quien necesita financiar el flujo de caja tributario.' }
+];
+
+DATA.criteriosAgencia = [
+  { titulo: 'Nivel de la agencia', detalle: 'Nivel 1 es el más alto: mayor patrimonio exigido, puede actuar en todo el territorio y en todos los regímenes. Nivel 2 y 3 tienen limitaciones de cobertura y de valor. Para operación seria, exija Nivel 1.' },
+  { titulo: 'Certificación OEA', detalle: 'Operador Económico Autorizado. Se traduce en menos inspecciones físicas, levantes más rápidos y prioridad en puerto. Ahorra días de almacenaje reales.' },
+  { titulo: 'Póliza de cumplimiento vigente', detalle: 'Pida copia. Es lo que responde si la agencia comete un error que le genera una sanción.' },
+  { titulo: 'Responsabilidad solidaria', detalle: 'La agencia responde solidariamente por los tributos aduaneros. Una agencia informal lo deja expuesto a usted.' },
+  { titulo: 'Especialidad en su producto', detalle: 'Un buen agente en maquinaria puede ser pésimo en alimentos. Pregunte por referencias de SU capítulo arancelario.' },
+  { titulo: 'Cobertura en su puerto', detalle: 'Que tenga oficina propia (no corresponsal) donde llega su carga. La diferencia se nota en el tiempo de levante.' },
+  { titulo: 'Estructura de tarifa clara', detalle: 'Exija el desglose: honorarios de agenciamiento, gastos operativos, manejo documental y reembolsables. Muchas sorpresas viven en el rubro "otros gastos".' },
+  { titulo: 'Verificación en la DIAN', detalle: 'Consulte el RUT aduanero en el portal de la DIAN y confirme que la habilitación está vigente y no suspendida.' }
+];
+
+DATA.senalesAlerta = [
+  'Le ofrece "nacionalizar barato" o bajar el valor declarado en factura: es contrabando técnico y la responsabilidad penal es suya.',
+  'No le entrega la Declaración de Importación original con su NIT como importador.',
+  'Cobra una tarifa única "todo incluido" sin desglose y sin factura de los reembolsables.',
+  'No firma mandato aduanero escrito.',
+  'No aparece habilitada, o aparece suspendida, en el registro de la DIAN.',
+  'Le pide pagar los tributos a una cuenta personal y no directamente al recaudo de la DIAN.',
+  'Presiona para clasificar en una partida distinta a la técnica solo para pagar menos arancel.'
+];
+
+/* ---------------------------------------------------------------------------
+   6. PROCESO DE IMPORTACION — paso a paso
+--------------------------------------------------------------------------- */
+DATA.pasosImportacion = [
+  {
+    n: 1, titulo: 'Habilítese como importador', cuando: 'Una sola vez, antes de todo', dias: '1 a 5 días',
+    acciones: [
+      'RUT ante la DIAN con la actividad de importador (responsabilidad 22 — Obligado a inscribirse como importador).',
+      'Firma electrónica de la DIAN para el portal MUISCA.',
+      'Registro mercantil vigente en la Cámara de Comercio.',
+      'Cuenta bancaria en un Intermediario del Mercado Cambiario (IMC) para canalizar el giro al exterior.'
+    ],
+    tip: 'Como persona natural también puede importar, pero si va a vender la mercancía necesita estar registrado como responsable de IVA para poder descontar el IVA pagado en la nacionalización. Ese IVA es el rubro más grande del costo: no lo pierda.'
+  },
+  {
+    n: 2, titulo: 'Clasifique la mercancía (partida arancelaria)', cuando: 'ANTES de cerrar la compra', dias: '1 a 3 días',
+    acciones: [
+      'Determine la subpartida a 10 digitos en el Arancel de Aduanas.',
+      'Verifique arancel, IVA y si hay antidumping o salvaguardia vigente.',
+      'Identifique vistos buenos obligatorios (INVIMA, ICA, ANLA, MinMinas, INDUMIL, SIC).',
+      'Si hay duda, solicite Resolución Anticipada de Clasificación Arancelaria a la DIAN.'
+    ],
+    tip: 'Este es el paso que más dinero mueve. Una diferencia de partida entre 5% y 15% de arancel sobre un contenedor de USD 40.000 son casi USD 4.000. Nunca deje que el proveedor extranjero le diga la partida colombiana.'
+  },
+  {
+    n: 3, titulo: 'Registro o licencia de importación en la VUCE', cuando: 'ANTES del embarque', dias: '1 a 15 días',
+    acciones: [
+      'Libre importación sin registro: la mayoría de bienes. No requiere trámite previo.',
+      'Libre importación CON registro: cuando la subpartida exige visto bueno de una entidad.',
+      'Licencia previa: bienes usados, remanufacturados, donaciones y regímenes especiales.'
+    ],
+    tip: 'Si su producto necesita visto bueno y la carga ya salio del origen, va a pagar almacenaje mientras tramita. Resuelva la VUCE antes de que el proveedor embarque.'
+  },
+  {
+    n: 4, titulo: 'Negocie el Incoterm correcto', cuando: 'En la orden de compra', dias: '—',
+    acciones: [
+      'FOB: usted controla flete y seguro. Es la opción que más plata ahorra si tiene un buen forwarder.',
+      'EXW: usted asume todo desde la fábrica. Solo si domina la logística del origen.',
+      'CIF: comodo pero el proveedor le carga un margen sobre el flete y además ese flete entra a la base gravable.',
+      'DDP: el proveedor nacionaliza. Comodo, opaco y casi siempre el más caro. Además usted pierde el soporte del IVA descontable.'
+    ],
+    tip: 'Regla práctica: compre FOB y contrate usted el flete. En un contenedor típico eso baja el costo total entre 5% y 12%.'
+  },
+  {
+    n: 5, titulo: 'Contrate transporte y seguro', cuando: '2 a 4 semanas antes del embarque', dias: '1 a 5 días',
+    acciones: [
+      'Cotice mínimo con tres forwarders y compare TODO incluido, no solo el flete base.',
+      'Negocie días libres de demurrage y detention (pida 14 o 21 días, no acepte 7).',
+      'Contrate póliza de transporte internacional. Una póliza propia cuesta entre 0,15% y 0,45% del CIF; la del forwarder suele ser más cara.'
+    ],
+    tip: 'El seguro no es opcional en la práctica: la DIAN presume un valor de seguro para liquidar tributos aunque usted no lo contrate. Si igual lo van a cobrar en la base, contrátelo de verdad.'
+  },
+  {
+    n: 6, titulo: 'Documentos de embarque', cuando: 'Al embarcar', dias: '—',
+    acciones: [
+      'Factura comercial (con Incoterm, valor unitario y condiciones de pago).',
+      'Lista de empaque (packing list) con pesos y dimensiones reales.',
+      'Documento de transporte: BL marítimo, AWB aéreo o CRT terrestre.',
+      'Certificado de origen si hay acuerdo comercial. SIN ESTE DOCUMENTO NO HAY ARANCEL PREFERENCIAL.',
+      'Certificados sanitarios o de conformidad según el producto.'
+    ],
+    tip: 'Revise el borrador del BL antes de que la naviera lo emita. Corregir un BL emitido cuesta entre USD 50 y 150 y puede retrasar el levante varios días.'
+  },
+  {
+    n: 7, titulo: 'Declaración anticipada', cuando: 'Hasta 15 días antes de la llegada', dias: '1 día',
+    acciones: [
+      'Su agencia presenta la Declaración de Importación antes de que llegue la nave.',
+      'Es obligatoria en varios casos y muy recomendable en todos.',
+      'Pague los tributos en el banco autorizado.'
+    ],
+    tip: 'Declarar anticipadamente le puede ahorrar entre 3 y 7 días de almacenaje. Con almacenaje de USD 30 diarios son entre USD 90 y 210 por contenedor, y evita el riesgo de caer en abandono.'
+  },
+  {
+    n: 8, titulo: 'Llegada, inspección y levante', cuando: 'A la llegada', dias: '1 a 8 días',
+    acciones: [
+      'Aviso de llegada y descargue al depósito habilitado.',
+      'Selección automática del canal: levante automático, inspección documental o inspección física.',
+      'La DIAN autoriza el levante.',
+      'Retire la carga antes de que se agoten los días libres.'
+    ],
+    tip: 'Ser OEA o trabajar con agencia OEA reduce mucho la probabilidad de inspección física. Una inspección física agrega entre 2 y 5 días y entre USD 150 y 400 en costos de movilización.'
+  },
+  {
+    n: 9, titulo: 'Transporte interno y cierre', cuando: 'Post levante', dias: '1 a 4 días',
+    acciones: [
+      'Traslado a su bodega. Devuelva el contenedor vacio dentro del plazo o pagara detention.',
+      'Declaración de cambio por importación (Formulario 1) al girar al exterior.',
+      'Archive el expediente completo: la DIAN puede revisar hasta 3 años después.',
+      'Descuente el IVA pagado en su declaración bimestral o cuatrimestral.'
+    ],
+    tip: 'Guarde TODO: declaración, BL, factura, mandato, pagos. En una fiscalización, el expediente incompleto se traduce en desconocimiento del costo y del IVA descontable.'
+  }
+];
+
+/* ---------------------------------------------------------------------------
+   7. PROCESO DE EXPORTACION — paso a paso
+--------------------------------------------------------------------------- */
+DATA.pasosExportacion = [
+  {
+    n: 1, titulo: 'Habilítese como exportador', cuando: 'Una sola vez', dias: '1 a 5 días',
+    acciones: [
+      'RUT con la actividad de exportador inscrita ante la DIAN.',
+      'Firma electrónica para MUISCA.',
+      'Registro en la VUCE (Ventanilla Única de Comercio Exterior) del MinCIT.',
+      'Cuenta en un IMC para el reintegro obligatorio de divisas.'
+    ],
+    tip: 'Regístrese también en ProColombia: la asesoría, los estudios de mercado y las agendas comerciales son gratuitos y están hechos para su perfil profesional.'
+  },
+  {
+    n: 2, titulo: 'Estudie el mercado y la posición arancelaria de destino', cuando: 'Antes de cotizar', dias: '3 a 15 días',
+    acciones: [
+      'Determine la partida en el arancel del país destino, no en el colombiano.',
+      'Verifique el arancel que pagara su comprador y si un TLC lo lleva a 0%.',
+      'Revise requisitos NO arancelarios: FDA para alimentos en EE.UU., certificaciones sanitarias en la UE, etiquetado.',
+      'Calcule el precio de exportación partiendo del precio meta en el mercado destino, no de su costo.'
+    ],
+    tip: 'El arancel preferencial es su ventaja competitiva vendible. Si su producto entra a EE.UU. al 0% por el TLC y el de un competidor asiático paga 15%, eso es margen que usted puede capturar o usar para ganar el negocio.'
+  },
+  {
+    n: 3, titulo: 'Certificado de origen', cuando: 'Antes del embarque', dias: '1 a 5 días',
+    acciones: [
+      'Registre el productor y diligencie la Declaración Juramentada de Origen en la VUCE (vigencia de 2 años).',
+      'Solicite el certificado de origen para cada embarque.',
+      'Para la Unión Europea: sistema de exportador registrado (REX), la declaración va en la factura.'
+    ],
+    tip: 'La Declaración Juramentada de Origen se hace una vez por producto y sirve dos años. Hágala apenas tenga el producto definido, no cuando ya tenga el pedido encima.'
+  },
+  {
+    n: 4, titulo: 'Vistos buenos sectoriales', cuando: 'Antes del embarque', dias: '2 a 20 días',
+    acciones: [
+      'ICA: productos agropecuarios, certificado fitosanitario o zoosanitario.',
+      'INVIMA: alimentos procesados, cosméticos, medicamentos, dispositivos médicos.',
+      'ANLA / MinAmbiente: fauna, flora, especies CITES.',
+      'MinCultura: bienes de interes cultural.'
+    ],
+    tip: 'El certificado fitosanitario del ICA tiene vigencia corta y debe coincidir exactamente con el lote embarcado. Coordine la inspección con la fecha real de cargue.'
+  },
+  {
+    n: 5, titulo: 'Solicitud de Autorización de Embarque (SAE)', cuando: 'Antes de ingresar a zona primaria', dias: '1 día',
+    acciones: [
+      'Se presenta en MUISCA-DIAN, directamente o a través de agencia de aduanas.',
+      'La DIAN asigna canal: automático o con inspección.',
+      'Autorizado el embarque, la mercancía ingresa a zona primaria y se carga.'
+    ],
+    tip: 'Para envíos de valor FOB inferior a USD 10.000 puede presentar la SAE usted mismo sin agencia de aduanas. Por encima de ese monto necesita agencia.'
+  },
+  {
+    n: 6, titulo: 'Declaración de Exportación (DEX)', cuando: 'Después del embarque', dias: '1 a 2 días',
+    acciones: [
+      'La SAE se convierte en DEX (Formulario 600) una vez certificado el embarque por el transportador.',
+      'Plazo: dentro del mes siguiente al embarque.',
+      'La aprobación suele tardar entre 24 y 48 horas hábiles.'
+    ],
+    tip: 'El DEX es su soporte para tres cosas: que la venta está exenta de IVA, la devolución del IVA pagado en insumos, y el reintegro de divisas. Sin DEX no hay beneficio tributario.'
+  },
+  {
+    n: 7, titulo: 'Cobro y reintegro de divisas', cuando: 'Según lo pactado', dias: '—',
+    acciones: [
+      'Canalice el pago obligatoriamente por un IMC.',
+      'Diligencie la Declaración de Cambio por exportaciones (Formulario 2).',
+      'Instrumentos de pago: carta de crédito (más seguro), cobranza documentaria, transferencia anticipada.',
+      'Considere un seguro de crédito a la exportación si vende a plazo.'
+    ],
+    tip: 'Con un comprador nuevo, exija carta de crédito confirmada o al menos 30% de anticipo. El costo de la carta de crédito (entre 0,5% y 1,5%) es barato frente a perder el embarque completo.'
+  },
+  {
+    n: 8, titulo: 'Aproveche los beneficios del exportador', cuando: 'Permanente', dias: '—',
+    acciones: [
+      'Exportaciones exentas de IVA: usted tiene derecho a la DEVOLUCIÓN del IVA de sus insumos.',
+      'Plan Vallejo: importe materias primas e insumos sin arancel ni IVA si los transforma para exportar.',
+      'Zonas Francas: tarifa de renta preferencial y arancel 0 en insumos.',
+      'Bancóldex: líneas de crédito de capital de trabajo y modernización para exportadores.',
+      'ProColombia: agendas comerciales, ferias y estudios de mercado sin costo.'
+    ],
+    tip: 'El Plan Vallejo es el beneficio más subutilizado del país. Si usted importa insumos para transformar y reexportar, deja de pagar arancel e IVA en la entrada. En operaciones de manufactura eso puede ser entre 20% y 30% del costo del insumo liberado.'
+  }
+];
+
+/* ---------------------------------------------------------------------------
+   8. CUANDO — calendario y ventanas de decision
+--------------------------------------------------------------------------- */
+DATA.calendario = [
+  { mes: 'Enero', tipo: 'alerta', titulo: 'Pre Año Nuevo Chino', detalle: 'Las fábricas chinas corren a despachar antes del feriado y los fletes suben. Si no ordeno en noviembre, ya va tarde para el primer trimestre.' },
+  { mes: 'Feb', tipo: 'alerta', titulo: 'Año Nuevo Chino', detalle: 'Fábricas cerradas entre 2 y 4 semanas y reactivación lenta. No programe llegadas criticas entre febrero y mediados de marzo desde Asia.' },
+  { mes: 'Mar', tipo: 'bueno', titulo: 'Mejor ventana de fletes', detalle: 'Temporada baja marítima. Los mejores precios FCL del año suelen estar entre marzo y mayo. Es el momento para negociar contrato anual con la naviera.' },
+  { mes: 'Abr', tipo: 'bueno', titulo: 'Temporada baja', detalle: 'Buena disponibilidad de espacio y equipos. Ideal para importar inventario de rotación lenta.' },
+  { mes: 'May', tipo: 'bueno', titulo: 'Última ventana barata', detalle: 'Último mes de tarifas bajas antes de que empiece a apretar la temporada alta.' },
+  { mes: 'Jun', tipo: 'neutro', titulo: 'Inicio de alza', detalle: 'Comienzan los anuncios de GRI (incremento general de tarifas). Cierre ahora lo que llegue en el segundo semestre.' },
+  { mes: 'Jul', tipo: 'alerta', titulo: 'Arranca temporada alta', detalle: 'Sube la demanda global de espacio hacia Navidad. Reserve con 4 a 6 semanas de anticipación.' },
+  { mes: 'Ago', tipo: 'alerta', titulo: 'Pico de temporada alta', detalle: 'Los fletes desde Asia pueden estar entre 30% y 80% por encima de la temporada baja. Último momento razonable para carga de Navidad por vía marítima.' },
+  { mes: 'Sep', tipo: 'alerta', titulo: 'Congestión portuaria', detalle: 'Alta ocupación en Buenaventura y Cartagena. Sume días de colchón a su planeación.' },
+  { mes: 'Oct', tipo: 'alerta', titulo: 'Golden Week China', detalle: 'Primera semana de octubre: China para. Además, lo que se embarque en octubre desde Asia ya no alcanza a llegar para Navidad.' },
+  { mes: 'Nov', tipo: 'clave', titulo: 'Momento de ordenar el Q1', detalle: 'Ordene ahora lo que necesite en enero, febrero y marzo, antes del cierre por Año Nuevo Chino. Este es el mes de decisión más importante del año para quien importa de Asia.' },
+  { mes: 'Dic', tipo: 'neutro', titulo: 'Cierre fiscal', detalle: 'Considere el efecto en su inventario a 31 de diciembre y en la declaración de renta. Los puertos operan con menos personal entre el 20 de diciembre y el 5 de enero.' }
+];
+
+DATA.reglaTiempo = [
+  { concepto: 'Lead time total desde China (marítimo)', valor: '55 a 80 días', detalle: 'Producción (25-40) + tránsito (30-42) + nacionalización (3-8) + interno (1-3).' },
+  { concepto: 'Lead time total desde EE.UU. (marítimo)', valor: '25 a 40 días', detalle: 'Producción o alistamiento (10-20) + tránsito (6-12) + nacionalización (3-8).' },
+  { concepto: 'Lead time aéreo desde Asia', valor: '12 a 20 días', detalle: 'Alistamiento + tránsito (6-10) + nacionalización (2-4).' },
+  { concepto: 'Courier puerta a puerta', valor: '5 a 12 días', detalle: 'La opción más rápida. La más cara por kilo.' },
+  { concepto: 'Días libres de almacenaje en puerto', valor: '5 días hábiles típicos', detalle: 'Después corre almacenaje diario. Negocie más días libres en el contrato de flete.' },
+  { concepto: 'Permanencia máxima en depósito', valor: '1 mes prorrogable', detalle: 'Vencido el término sin declarar, la mercancía cae en ABANDONO a favor de la Nación.' },
+  { concepto: 'Plazo para presentar el DEX tras embarque', valor: 'Dentro del mes siguiente', detalle: 'Aplica a exportaciones.' },
+  { concepto: 'Término de fiscalización de la DIAN', valor: '3 años', detalle: 'Conserve el expediente completo de cada operación durante ese periodo.' }
+];
+
+/* ---------------------------------------------------------------------------
+   9. ESTRATEGIAS PARA BAJAR EL COSTO
+--------------------------------------------------------------------------- */
+DATA.estrategias = [
+  { titulo: 'Compre en origen con TLC', ahorro: '5% a 20% del CIF', detalle: 'Antes de cerrar con China, cotice el mismo producto en México, Perú, Corea o EE.UU. Un arancel de 15% eliminado compensa un precio FOB hasta 15% más alto. Compare el DESEMBARCADO, no el precio de fábrica.', dificultad: 'Media' },
+  { titulo: 'Exija el certificado de origen', ahorro: 'Hasta el 100% del arancel', detalle: 'El error más caro y más común: comprar en un país con TLC y no pedir el certificado de origen. Sin el papel, usted paga arancel pleno aunque el acuerdo exista. Póngalo como condición de pago en la orden de compra.', dificultad: 'Baja' },
+  { titulo: 'Pase de LCL a FCL', ahorro: '30% a 50% del flete', detalle: 'El punto de equilibrio está alrededor de 13-15 CBM. Por encima de eso, un contenedor de 20 pies casi siempre sale más barato por metro cúbico que el consolidado. Y un 40 High Cube tiene el mejor costo por CBM del mercado.', dificultad: 'Baja' },
+  { titulo: 'Consolide varios proveedores', ahorro: '20% a 40% del flete', detalle: 'Si compra a tres fábricas chinas de la misma región, su forwarder puede consolidarlas en un solo contenedor. Paga un cargo de consolidación en origen (entre USD 150 y 400) y ahorra dos fletes completos.', dificultad: 'Media' },
+  { titulo: 'Negocie FOB, no CIF ni DDP', ahorro: '5% a 12% del total', detalle: 'Cuando el proveedor cotiza CIF, le está cargando un margen sobre el flete. Peor aún: ese flete inflado entra en la base gravable, así que usted paga arancel e IVA sobre el sobreprecio del proveedor.', dificultad: 'Baja' },
+  { titulo: 'Declaración anticipada', ahorro: 'USD 100 a 400 por contenedor', detalle: 'Presentar la declaración antes de que llegue el buque elimina días de almacenaje y reduce el riesgo de abandono. Cuesta lo mismo y se hace con la documentación que ya tiene.', dificultad: 'Baja' },
+  { titulo: 'Clasificación arancelaria correcta', ahorro: '5% a 15% del CIF', detalle: 'Muchos importadores pagan de más por clasificar en una partida genérica. Un estudio de clasificación cuesta entre USD 80 y 250 y se paga solo en el primer embarque. Si hay duda, pida Resolución Anticipada a la DIAN: le da certeza jurídica.', dificultad: 'Media' },
+  { titulo: 'Plan Vallejo', ahorro: '20% a 30% del insumo', detalle: 'Si usted transforma insumos importados y luego exporta, el Plan Vallejo le permite importar esos insumos sin arancel y sin IVA. Es el beneficio más potente y más subutilizado para el manufacturero exportador.', dificultad: 'Alta' },
+  { titulo: 'Zona Franca o depósito aduanero', ahorro: 'Flujo de caja', detalle: 'Ingrese la mercancía y nacionalice por partes a medida que vende. No baja el tributo total, pero libera capital de trabajo. Con un contenedor de USD 50.000, el IVA solo son cerca de USD 11.000 congelados.', dificultad: 'Media' },
+  { titulo: 'Certifíquese como OEA o UAP', ahorro: 'Días y costos indirectos', detalle: 'Operador Económico Autorizado: menos inspecciones físicas, levante prioritario, posibilidad de pago consolidado. Para quien importa más de 10 contenedores al año, el retorno es claro.', dificultad: 'Alta' },
+  { titulo: 'Negocie días libres de demurrage', ahorro: 'USD 500 a 3.000 por incidente', detalle: 'El demurrage corre entre USD 60 y 150 por día por contenedor después de los días libres. Pida 14 o 21 días libres al momento de contratar el flete, cuando todavia tiene poder de negociacion.', dificultad: 'Baja' },
+  { titulo: 'Elija bien el puerto de entrada', ahorro: 'USD 200 a 800 por contenedor', detalle: 'No siempre gana el puerto con flete marítimo más barato. Sume el flete terrestre interno: para Bogotá y Medellín, Cartagena suele ganar; para Cali y el suroccidente, Buenaventura.', dificultad: 'Baja' },
+  { titulo: 'Póliza de transporte propia', ahorro: '0,1% a 0,3% del CIF', detalle: 'Una póliza abierta anual con una aseguradora local es más barata que asegurar cada embarque con el forwarder, y le da mejor cobertura y respuesta local en un siniestro.', dificultad: 'Baja' },
+  { titulo: 'Importe en temporada baja', ahorro: '20% a 40% del flete', detalle: 'Entre marzo y mayo los fletes desde Asia están en su punto más bajo. Si su producto no es perecedero ni de moda, adelantar la compra es rentabilidad pura.', dificultad: 'Baja' },
+  { titulo: 'No pierda el IVA descontable', ahorro: '19% del CIF + arancel', detalle: 'Si usted es responsable de IVA, el IVA de la nacionalización es descontable: no es costo, es un anticipo. Importar a nombre de un tercero o comprar DDP le puede hacer perder ese derecho. Es el error más caro de todos.', dificultad: 'Baja' }
+];
+
+/* ---------------------------------------------------------------------------
+   10. PARAMETROS TRIBUTARIOS Y OPERATIVOS POR DEFECTO
+--------------------------------------------------------------------------- */
+DATA.parametros = {
+  ivaGeneral: 19,
+  seguroPresuntoPct: 0.5,        // % sobre FOB si no se declara seguro real
+  agenciamientoPct: 0.6,          // % sobre valor CIF
+  agenciamientoMinUsd: 180,       // honorario minimo tipico
+  agenciamientoMaxUsd: 900,       // tope tipico negociado
+  gastosBancariosPct: 0.5,        // giro al exterior
+  gmfPct: 0.4,                    // 4x1000
+  inspeccionUsd: [150, 400],
+  demurrageDia: [60, 150],
+  courierArancelUnico: 10,        // % arancel unico modalidad courier
+  courierUmbralFob: 200,          // USD - por debajo no paga arancel ni IVA
+  courierTopeFob: 2000,           // USD - tope por envio en la modalidad
+  dexUmbralAgencia: 10000,        // USD FOB - por encima requiere agencia de aduanas
+  davUmbralFob: 5000              // USD FOB - por encima requiere Declaracion Andina del Valor
+};
+
+DATA.ciudades = [
+  { id: 'bogota', nombre: 'Bogotá' },
+  { id: 'medellin', nombre: 'Medellín' },
+  { id: 'cali', nombre: 'Cali' },
+  { id: 'barranquilla', nombre: 'Barranquilla' },
+  { id: 'bucaramanga', nombre: 'Bucaramanga' }
+];
+
+DATA.fuentes = [
+  { nombre: 'DIAN — Arancel de aduanas y consulta de subpartidas', url: 'https://www.dian.gov.co' },
+  { nombre: 'VUCE — Ventanilla Única de Comercio Exterior', url: 'https://www.vuce.gov.co' },
+  { nombre: 'MinCIT — Ministerio de Comercio, Industria y Turismo', url: 'https://www.mincit.gov.co' },
+  { nombre: 'ProColombia — Apoyo al exportador', url: 'https://procolombia.co' },
+  { nombre: 'DIAN — Tráfico postal y envíos urgentes', url: 'https://www.dian.gov.co/Viajeros-y-Servicios-aduaneros/Paginas/Modalidad-de-trafico-postal-y-envios-urgentes.aspx' },
+  { nombre: 'Puerto de Cartagena — Tarifas reguladas', url: 'https://www.puertocartagena.com' },
+  { nombre: 'APM Terminals Buenaventura — Tarifas', url: 'https://www.apmterminals.com/es/buenaventura/practical-information/tariffs' },
+  { nombre: 'Bancóldex — Financiación para comercio exterior', url: 'https://www.bancoldex.com' },
+  { nombre: 'La Nota Económica — Ranking de agencias de aduanas', url: 'https://lanota.com' }
+];
+
+/* ============================================================================
+   MOTOR DE CALCULO — Costo desembarcado de importacion a Colombia
+   ----------------------------------------------------------------------------
+   Estructura tributaria colombiana:
+     Valor en Aduana (CIF) = FOB + Flete internacional + Seguro
+     Arancel               = CIF x %arancel
+     Base IVA              = CIF + Arancel
+     IVA                   = Base IVA x %IVA
+   Los gastos locales (puerto, agenciamiento, transporte interno) NO hacen
+   parte de la base gravable, pero SI del costo real de la operacion.
+   ========================================================================== */
+
+const CALC = (function () {
+
+  const P = DATA.parametros;
+
+  /* --- utilidades --- */
+  const mid = (r) => (r[0] + r[1]) / 2;
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const num = (v, def = 0) => {
+    const n = parseFloat(String(v).replace(/[^0-9.\-]/g, ''));
+    return isNaN(n) ? def : n;
+  };
+
+  function getOrigen(id) { return DATA.origenes.find(o => o.id === id); }
+  function getPuerto(id) { return DATA.puertos.find(p => p.id === id); }
+  function getCategoria(id) { return DATA.categorias.find(c => c.id === id); }
+
+  /* ------------------------------------------------------------------
+     Peso tasable aereo: se cobra el mayor entre peso real y peso
+     volumetrico (m3 x 167 kg, equivalente al divisor 6000 en cm).
+  ------------------------------------------------------------------ */
+  function pesoTasable(pesoKg, volumenCbm) {
+    return Math.max(pesoKg, volumenCbm * 167);
+  }
+
+  /* ------------------------------------------------------------------
+     Capacidad util real de cada tipo de contenedor
+  ------------------------------------------------------------------ */
+  const CAPACIDAD = {
+    fcl20:   { cbm: 28,  ton: 28 },
+    fcl40:   { cbm: 58,  ton: 26 },
+    fcl40hc: { cbm: 68,  ton: 26 }
+  };
+
+  /* ------------------------------------------------------------------
+     Estimacion de flete internacional para una modalidad dada.
+     escenario: 'bajo' | 'medio' | 'alto'
+     Devuelve { flete, detalle, viable, unidades }
+  ------------------------------------------------------------------ */
+  function estimarFlete(modalidad, origen, pesoKg, volumenCbm, escenario) {
+    const pick = (rango) => {
+      if (escenario === 'bajo') return rango[0];
+      if (escenario === 'alto') return rango[1];
+      return mid(rango);
+    };
+
+    switch (modalidad) {
+
+      case 'courier': {
+        const tarifa = pick(origen.courierKg);
+        const tasable = pesoTasable(pesoKg, volumenCbm);
+        return {
+          flete: tasable * tarifa,
+          unidades: `${tasable.toFixed(1)} kg tasables x USD ${tarifa.toFixed(2)}/kg`,
+          viable: pesoKg <= 50,
+          motivo: pesoKg > 50 ? 'La modalidad courier no es practica por encima de 50 kg.' : ''
+        };
+      }
+
+      case 'aereo': {
+        const tarifa = pick(origen.aereoKg);
+        const tasable = pesoTasable(pesoKg, volumenCbm);
+        // Cargos fijos de aerolinea: AWB, combustible, seguridad, handling
+        const fijos = escenario === 'bajo' ? 90 : escenario === 'alto' ? 260 : 165;
+        return {
+          flete: tasable * tarifa + fijos,
+          unidades: `${tasable.toFixed(1)} kg tasables x USD ${tarifa.toFixed(2)}/kg + USD ${fijos} fijos`,
+          viable: true,
+          motivo: ''
+        };
+      }
+
+      case 'lcl': {
+        const tarifa = pick(origen.lclCbm);
+        // El consolidador cobra por el mayor entre m3 y toneladas (peso/volumen)
+        const unidadesW_M = Math.max(volumenCbm, pesoKg / 1000);
+        const facturables = Math.max(unidadesW_M, origen.lclMinCbm);
+        // Cargos fijos de consolidacion en origen y destino
+        const fijos = escenario === 'bajo' ? 110 : escenario === 'alto' ? 300 : 190;
+        return {
+          flete: facturables * tarifa + fijos,
+          unidades: `${facturables.toFixed(2)} W/M x USD ${tarifa.toFixed(0)}/CBM + USD ${fijos} de consolidacion`,
+          viable: volumenCbm <= 15,
+          motivo: volumenCbm > 15 ? 'Por encima de 15 CBM el contenedor completo suele ser mas barato.' : ''
+        };
+      }
+
+      case 'fcl20':
+      case 'fcl40':
+      case 'fcl40hc': {
+        const tarifa = pick(origen[modalidad]);
+        const cap = CAPACIDAD[modalidad];
+        const nCbm = Math.ceil(volumenCbm / cap.cbm) || 1;
+        const nTon = Math.ceil((pesoKg / 1000) / cap.ton) || 1;
+        const contenedores = Math.max(1, nCbm, nTon);
+        return {
+          flete: tarifa * contenedores,
+          unidades: `${contenedores} contenedor(es) x USD ${Math.round(tarifa).toLocaleString('es-CO')}`,
+          contenedores,
+          viable: true,
+          ocupacion: clamp((volumenCbm / (cap.cbm * contenedores)) * 100, 0, 100),
+          motivo: ''
+        };
+      }
+
+      default:
+        return { flete: 0, unidades: '', viable: false, motivo: 'Modalidad no reconocida.' };
+    }
+  }
+
+  /* ------------------------------------------------------------------
+     CALCULO PRINCIPAL
+     input = {
+       fob, cantidad, modalidad, origenId, puertoId, ciudadId,
+       pesoKg, volumenCbm, arancelPct, ivaPct, escenario,
+       fleteManual (opcional), seguroPct, aplicaTLC (bool),
+       responsableIva (bool), diasAlmacenaje, trm
+     }
+  ------------------------------------------------------------------ */
+  function calcular(input) {
+    const origen  = getOrigen(input.origenId);
+    const puerto  = getPuerto(input.puertoId);
+    const esc     = input.escenario || 'medio';
+    const pick    = (r) => esc === 'bajo' ? r[0] : esc === 'alto' ? r[1] : mid(r);
+
+    const fob      = num(input.fob);
+    const cantidad = Math.max(1, num(input.cantidad, 1));
+    const pesoKg   = num(input.pesoKg);
+    const volCbm   = num(input.volumenCbm);
+    const trm      = num(input.trm, 4000);
+
+    /* ---- 1. Flete internacional ---- */
+    const est = estimarFlete(input.modalidad, origen, pesoKg, volCbm, esc);
+    const flete = input.fleteManual != null && input.fleteManual !== ''
+      ? num(input.fleteManual)
+      : est.flete;
+
+    /* ---- 2. Seguro ---- */
+    const seguroPct = input.seguroPct != null ? num(input.seguroPct) : P.seguroPresuntoPct;
+    const seguro = (fob + flete) * (seguroPct / 100);
+
+    /* ---- 3. Valor en aduana (CIF) ---- */
+    const cif = fob + flete + seguro;
+
+    /* ---- 4. Arancel ---- */
+    // La modalidad courier tiene arancel unico y umbral de exencion propio
+    let arancelPct = num(input.arancelPct);
+    let arancelNota = '';
+
+    if (input.modalidad === 'courier') {
+      if (fob <= P.courierUmbralFob) {
+        arancelPct = 0;
+        arancelNota = `Envio de USD ${fob.toFixed(0)} FOB: por debajo del umbral de USD ${P.courierUmbralFob} no paga arancel ni IVA en la modalidad de trafico postal y envios urgentes.`;
+      } else {
+        arancelPct = P.courierArancelUnico;
+        arancelNota = `Arancel unico del ${P.courierArancelUnico}% propio de la modalidad courier (reemplaza el arancel de la partida).`;
+      }
+      if (fob > P.courierTopeFob) {
+        arancelNota += ` ATENCION: supera el tope de USD ${P.courierTopeFob} por envio de la modalidad; debe ir por importacion ordinaria.`;
+      }
+    } else if (input.aplicaTLC && origen.arancelPref === 0) {
+      arancelPct = 0;
+      arancelNota = `Arancel 0% por ${origen.tlc}. Requiere certificado de origen valido; sin ese documento la DIAN liquida el arancel pleno.`;
+    }
+
+    const arancel = cif * (arancelPct / 100);
+
+    /* ---- 5. IVA ---- */
+    let ivaPct = num(input.ivaPct, P.ivaGeneral);
+    if (input.modalidad === 'courier' && fob <= P.courierUmbralFob) ivaPct = 0;
+    const baseIva = cif + arancel;
+    const iva = baseIva * (ivaPct / 100);
+
+    /* ---- 6. Gastos locales ---- */
+    const esFcl = input.modalidad.startsWith('fcl');
+    const esAereo = input.modalidad === 'aereo' || input.modalidad === 'courier';
+    const nCont = est.contenedores || 1;
+
+    let gastosPuerto = 0;
+    let almacenaje = 0;
+
+    if (esAereo) {
+      gastosPuerto = puerto.gastosAereoFijo ? pick(puerto.gastosAereoFijo) : 200;
+      const dias = Math.max(0, num(input.diasAlmacenaje, 3) - (puerto.diasLibres || 2));
+      // El almacenaje aereo se tarifa por kilo/dia, no por contenedor/dia.
+      const tarifaKgDia = puerto.almacenajeUnidad ? puerto.almacenajeDia : [0.35, 0.9];
+      almacenaje = dias * pesoKg * pick(tarifaKgDia);
+    } else if (esFcl) {
+      gastosPuerto = pick(puerto.gastosFcl) * nCont;
+      const dias = Math.max(0, num(input.diasAlmacenaje, 5) - puerto.diasLibres);
+      almacenaje = dias * pick(puerto.almacenajeDia) * nCont;
+    } else {
+      gastosPuerto = pick(puerto.gastosLcl) * Math.max(1, volCbm);
+      const dias = Math.max(0, num(input.diasAlmacenaje, 5) - puerto.diasLibres);
+      almacenaje = dias * pick(puerto.almacenajeDia) * 0.4;
+    }
+
+    // Agenciamiento aduanero
+    let agenciamiento = cif * (P.agenciamientoPct / 100);
+    agenciamiento = clamp(agenciamiento, P.agenciamientoMinUsd, P.agenciamientoMaxUsd);
+    if (input.modalidad === 'courier') agenciamiento = 0; // incluido en la tarifa courier
+
+    // Transporte interno hasta la ciudad de destino
+    const rutas = puerto.fleteInterno || {};
+    const rutaCiudad = rutas[input.ciudadId];
+    let transporteInterno = rutaCiudad ? pick(rutaCiudad) : 0;
+    if (esFcl) transporteInterno *= nCont;
+    else if (input.modalidad === 'lcl') transporteInterno *= clamp(volCbm / 25, 0.25, 1);
+    else if (input.modalidad === 'courier') transporteInterno = 0; // puerta a puerta
+
+    // Gastos financieros del giro al exterior
+    const gastosBancarios = fob * (P.gastosBancariosPct / 100);
+    const gmf = (fob + arancel + iva) * (P.gmfPct / 1000);
+
+    const gastosLocales = gastosPuerto + almacenaje + agenciamiento + transporteInterno
+                        + gastosBancarios + gmf;
+
+    /* ---- 7. Totales ---- */
+    const tributos = arancel + iva;
+    const desembolsoTotal = cif + tributos + gastosLocales;
+
+    // Si es responsable de IVA, el IVA es descontable: no es costo real
+    const ivaRecuperable = input.responsableIva ? iva : 0;
+    const costoReal = desembolsoTotal - ivaRecuperable;
+
+    const costoUnitario = costoReal / cantidad;
+    const costoUnitarioCop = costoUnitario * trm;
+    const sobrecostoPct = fob > 0 ? ((costoReal - fob) / fob) * 100 : 0;
+
+    /* ---- 8. Transito estimado ---- */
+    const via = esAereo ? 'aereo' : 'maritimo';
+    const t = origen.transito[via];
+    const nacionalizacion = input.modalidad === 'courier' ? [1, 3] : [3, 8];
+    const totalDias = [t[0] + nacionalizacion[0], t[1] + nacionalizacion[1]];
+
+    return {
+      input, origen, puerto, estimacionFlete: est,
+      fob, flete, seguro, seguroPct, cif,
+      arancelPct, arancel, arancelNota,
+      ivaPct, baseIva, iva,
+      gastosPuerto, almacenaje, agenciamiento, transporteInterno,
+      gastosBancarios, gmf, gastosLocales,
+      tributos, desembolsoTotal, ivaRecuperable, costoReal,
+      cantidad, costoUnitario, costoUnitarioCop, sobrecostoPct,
+      trm, transito: t, totalDias, via
+    };
+  }
+
+  /* ------------------------------------------------------------------
+     COMPARADOR: corre el mismo embarque por todas las modalidades
+     viables y las ordena de la mas barata a la mas cara.
+  ------------------------------------------------------------------ */
+  function comparar(input) {
+    const modalidades = ['courier', 'aereo', 'lcl', 'fcl20', 'fcl40', 'fcl40hc'];
+    const origen = getOrigen(input.origenId);
+
+    const resultados = modalidades.map(m => {
+      // El puerto cambia segun la via
+      const puertoId = (m === 'aereo' || m === 'courier') ? 'bogota_aereo' : input.puertoId;
+      const est = estimarFlete(m, origen, num(input.pesoKg), num(input.volumenCbm), input.escenario || 'medio');
+      const r = calcular(Object.assign({}, input, {
+        modalidad: m,
+        puertoId,
+        fleteManual: null
+      }));
+      r.modalidadId = m;
+      r.modalidadNombre = DATA.modalidades.find(x => x.id === m).nombre;
+      r.viable = est.viable;
+      r.motivo = est.motivo;
+      return r;
+    });
+
+    const viables = resultados.filter(r => r.viable).sort((a, b) => a.costoReal - b.costoReal);
+    const noViables = resultados.filter(r => !r.viable).sort((a, b) => a.costoReal - b.costoReal);
+
+    return { viables, noViables, todos: viables.concat(noViables) };
+  }
+
+  /* ------------------------------------------------------------------
+     COMPARADOR DE ORIGENES: mismo producto, distintos paises.
+     Responde "de donde me sale mas barato traerlo".
+  ------------------------------------------------------------------ */
+  function compararOrigenes(input) {
+    return DATA.origenes.map(o => {
+      const puertoId = o.destinoNatural;
+      const aplicaTLC = o.arancelPref === 0;
+      const r = calcular(Object.assign({}, input, {
+        origenId: o.id,
+        puertoId: (input.modalidad === 'aereo' || input.modalidad === 'courier') ? 'bogota_aereo' : puertoId,
+        aplicaTLC,
+        fleteManual: null
+      }));
+      r.origenNombre = o.nombre;
+      r.tieneTLC = aplicaTLC;
+      return r;
+    }).sort((a, b) => a.costoReal - b.costoReal);
+  }
+
+  /* ------------------------------------------------------------------
+     PUNTO DE EQUILIBRIO LCL vs FCL para el origen dado.
+     El corte NO se decide solo por el flete: el consolidado paga gastos
+     portuarios por metro cubico, mientras el contenedor completo los paga
+     por unidad. Por eso se compara el costo desembarcado total.
+  ------------------------------------------------------------------ */
+  function equilibrioLclFcl(origenId, escenario, puertoId, ciudadId) {
+    const base = {
+      fob: 20000, cantidad: 1, trm: 4000,
+      origenId: origenId,
+      puertoId: puertoId && puertoId !== 'bogota_aereo' ? puertoId : getOrigen(origenId).destinoNatural,
+      ciudadId: ciudadId || 'bogota',
+      arancelPct: 10, ivaPct: 19, aplicaTLC: false, responsableIva: true,
+      escenario: escenario || 'medio', seguroPct: 0.5, diasAlmacenaje: 5
+    };
+    for (let cbm = 2; cbm <= 28; cbm += 0.5) {
+      const carga = { pesoKg: cbm * 200, volumenCbm: cbm };
+      const lcl = calcular(Object.assign({}, base, carga, { modalidad: 'lcl' })).costoReal;
+      const fcl = calcular(Object.assign({}, base, carga, { modalidad: 'fcl20' })).costoReal;
+      if (fcl <= lcl) return cbm;
+    }
+    return null;
+  }
+
+  /* ------------------------------------------------------------------
+     COSTEO DE EXPORTACION: precio FOB minimo desde un costo EXW
+  ------------------------------------------------------------------ */
+  function costearExportacion(inp) {
+    const costoProducto  = num(inp.costoProducto);
+    const cantidad       = Math.max(1, num(inp.cantidad, 1));
+    const margenPct      = num(inp.margenPct, 25);
+    const empaque        = num(inp.empaque);
+    const transporteInt  = num(inp.transporteInterno);
+    const gastosPuerto   = num(inp.gastosPuerto, 350);
+    const agenciamiento  = num(inp.agenciamiento, 250);
+    const certificados   = num(inp.certificados, 120);
+    const fleteInt       = num(inp.fleteInternacional);
+    const seguroPct      = num(inp.seguroPct, 0.4);
+    const finPct         = num(inp.financieroPct, 1.5);
+
+    const base = costoProducto + empaque;
+    const conMargen = base * (1 + margenPct / 100);
+    const exw = conMargen;
+
+    const costosPreEmbarque = transporteInt + gastosPuerto + agenciamiento + certificados;
+    const fca = exw + costosPreEmbarque;
+    const financiero = fca * (finPct / 100);
+    const fob = fca + financiero;
+
+    const seguro = (fob + fleteInt) * (seguroPct / 100);
+    const cfr = fob + fleteInt;
+    const cif = cfr + seguro;
+
+    return {
+      cantidad, costoProducto, empaque, base, margenPct,
+      utilidad: conMargen - base,
+      exw, transporteInt, gastosPuerto, agenciamiento, certificados,
+      costosPreEmbarque, fca, financiero, fob, fleteInt, seguro, cfr, cif,
+      fobUnitario: fob / cantidad,
+      cifUnitario: cif / cantidad,
+      requiereAgencia: fob > P.dexUmbralAgencia
+    };
+  }
+
+  return {
+    calcular, comparar, compararOrigenes, estimarFlete,
+    equilibrioLclFcl, costearExportacion,
+    getOrigen, getPuerto, getCategoria, pesoTasable, num
+  };
+})();
+
+/* ============================================================================
+   ImportaCol — capa de interfaz
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  const $  = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+  const usd = (n) => 'USD ' + Math.round(n).toLocaleString('es-CO');
+  const usd2 = (n) => 'USD ' + n.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const cop = (n) => '$' + Math.round(n).toLocaleString('es-CO');
+  const pct = (n) => n.toLocaleString('es-CO', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+  const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /* ======================= TEMA ======================= */
+  const themeBtn = $('#themeToggle');
+  const stored = localStorage.getItem('importacol-theme');
+  if (stored) document.documentElement.setAttribute('data-theme', stored);
+  themeBtn.addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const isDark = cur === 'dark' || (!cur && matchMedia('(prefers-color-scheme: dark)').matches);
+    const next = isDark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('importacol-theme', next);
+  });
+
+  /* ======================= NAVEGACION ======================= */
+  $$('#tabs .tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      $$('#tabs .tab').forEach(t => t.classList.remove('active'));
+      $$('.view').forEach(v => v.classList.remove('active'));
+      tab.classList.add('active');
+      $('#view-' + tab.dataset.view).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (tab.dataset.view === 'comparador') renderComparador();
+      if (tab.dataset.view === 'origenes') renderOrigenes();
+    });
+  });
+
+  /* ======================= POBLAR SELECTS ======================= */
+  const fill = (sel, items, val, label) => {
+    $(sel).innerHTML = items.map(i => `<option value="${i[val]}">${esc(i[label])}</option>`).join('');
+  };
+  fill('#origenId', DATA.origenes, 'id', 'nombre');
+  fill('#modalidad', DATA.modalidades, 'id', 'nombre');
+  fill('#puertoId', DATA.puertos, 'id', 'nombre');
+  fill('#ciudadId', DATA.ciudades, 'id', 'nombre');
+  fill('#categoriaId', DATA.categorias, 'id', 'nombre');
+
+  $('#modalidad').value = 'fcl20';
+  $('#categoriaId').value = 'herramientas';
+
+  /* ======================= LEER FORMULARIO ======================= */
+  function leerInput() {
+    return {
+      fob: $('#fob').value,
+      cantidad: $('#cantidad').value,
+      trm: $('#trm').value,
+      pesoKg: $('#pesoKg').value,
+      volumenCbm: $('#volumenCbm').value,
+      origenId: $('#origenId').value,
+      modalidad: $('#modalidad').value,
+      puertoId: $('#puertoId').value,
+      ciudadId: $('#ciudadId').value,
+      arancelPct: $('#arancelPct').value,
+      ivaPct: $('#ivaPct').value,
+      aplicaTLC: $('#aplicaTLC').checked,
+      responsableIva: $('#responsableIva').checked,
+      escenario: $('#escenario').value,
+      fleteManual: $('#fleteManual').value,
+      seguroPct: $('#seguroPct').value,
+      diasAlmacenaje: $('#diasAlmacenaje').value
+    };
+  }
+
+  /* ======================= SINCRONIZACIONES ======================= */
+  function syncOrigen() {
+    const o = CALC.getOrigen($('#origenId').value);
+    $('#origenNota').textContent = o.nota;
+    const tieneTLC = o.arancelPref === 0;
+    $('#tlcWrap').style.display = tieneTLC ? 'flex' : 'none';
+    $('#tlcLabel').textContent = tieneTLC ? '— ' + o.tlc : '';
+    if (!tieneTLC) $('#aplicaTLC').checked = false;
+    // Sugerir puerto natural si el usuario no ha tocado el selector
+    if (!$('#puertoId').dataset.touched) {
+      const m = $('#modalidad').value;
+      $('#puertoId').value = (m === 'aereo' || m === 'courier') ? 'bogota_aereo' : o.destinoNatural;
+    }
+  }
+
+  function syncCategoria() {
+    const c = CALC.getCategoria($('#categoriaId').value);
+    $('#arancelPct').value = c.arancel;
+    $('#ivaPct').value = c.iva;
+    $('#catNota').textContent = `Capítulos ${c.capitulos}. ${c.nota}`;
+  }
+
+  function syncModalidad() {
+    const m = $('#modalidad').value;
+    const o = CALC.getOrigen($('#origenId').value);
+    if (m === 'aereo' || m === 'courier') $('#puertoId').value = 'bogota_aereo';
+    else if ($('#puertoId').value === 'bogota_aereo') $('#puertoId').value = o.destinoNatural;
+  }
+
+  $('#puertoId').addEventListener('change', function () { this.dataset.touched = '1'; });
+  $('#origenId').addEventListener('change', () => { syncOrigen(); render(); });
+  $('#categoriaId').addEventListener('change', () => { syncCategoria(); render(); });
+  $('#modalidad').addEventListener('change', () => { syncModalidad(); render(); });
+  $('#formSim').addEventListener('input', render);
+  $('#formSim').addEventListener('change', render);
+
+  /* ======================= RENDER SIMULADOR ======================= */
+  function render() {
+    const r = CALC.calcular(leerInput());
+    const t = r.desembolsoTotal;
+    const w = (v) => (v / t * 100).toFixed(2) + '%';
+
+    const avisos = [];
+
+    if (r.arancelNota) {
+      avisos.push({ tipo: r.arancelPct === 0 ? 'good' : 'info', titulo: 'Arancel aplicado', texto: r.arancelNota });
+    }
+    if (!r.input.aplicaTLC && r.origen.arancelPref === 0 && r.input.modalidad !== 'courier') {
+      const ahorro = r.cif * (r.arancelPct / 100);
+      const ahorroIva = ahorro * (r.ivaPct / 100);
+      avisos.push({
+        tipo: 'warn',
+        titulo: 'Está dejando dinero sobre la mesa',
+        texto: `${r.origen.nombre} tiene ${r.origen.tlc}. Con certificado de origen el arancel baja a 0% y usted ahorra ${usd(ahorro)} de arancel más ${usd(ahorroIva)} de IVA sobre ese arancel: <strong>${usd(ahorro + ahorroIva)}</strong> en este solo embarque. Póngalo como condición de pago en la orden de compra.`
+      });
+    }
+    if (!r.input.responsableIva) {
+      avisos.push({
+        tipo: 'bad',
+        titulo: 'No está recuperando el IVA',
+        texto: `Al no ser responsable de IVA, los ${usd(r.iva)} de IVA quedan como costo hundido: son el ${pct(r.iva / r.costoReal * 100)} de su costo total. Si va a revender la mercancía, registrarse como responsable de IVA es la decisión más rentable que puede tomar.`
+      });
+    }
+    if (r.estimacionFlete.motivo) {
+      avisos.push({ tipo: 'warn', titulo: 'Sobre la modalidad elegida', texto: r.estimacionFlete.motivo });
+    }
+    if (r.almacenaje > 0) {
+      avisos.push({
+        tipo: 'warn',
+        titulo: 'Almacenaje en curso',
+        texto: `Está pagando ${usd(r.almacenaje)} por exceder los ${r.puerto.diasLibres} días libres. Con declaración anticipada este rubro normalmente se elimina.`
+      });
+    }
+    if (CALC.num(r.input.fob) > DATA.parametros.davUmbralFob && r.input.modalidad !== 'courier') {
+      avisos.push({
+        tipo: 'info',
+        titulo: 'Declaración Andina del Valor',
+        texto: `Con FOB superior a USD ${DATA.parametros.davUmbralFob.toLocaleString('es-CO')} debe presentar la Declaración Andina del Valor (DAV) junto con la declaración de importación.`
+      });
+    }
+    if (r.estimacionFlete.ocupacion != null && r.estimacionFlete.ocupacion < 65) {
+      avisos.push({
+        tipo: 'warn',
+        titulo: 'Contenedor subutilizado',
+        texto: `Está usando apenas el ${pct(r.estimacionFlete.ocupacion)} de la capacidad. Consolide con otro proveedor o evalúe consolidado marítimo: el flete se paga por contenedor, no por lo que quepa dentro.`
+      });
+    }
+
+    $('#resultados').innerHTML = `
+      <div class="headline">
+        <div class="headline-grid">
+          <div>
+            <div class="kpi-label">Costo real de la operación</div>
+            <div class="kpi-value big accent">${usd(r.costoReal)}</div>
+            <div class="kpi-sub">${r.input.responsableIva ? 'Neto de IVA descontable' : 'IVA incluido como costo'}</div>
+          </div>
+          <div>
+            <div class="kpi-label">Desembolso de caja</div>
+            <div class="kpi-value">${usd(r.desembolsoTotal)}</div>
+            <div class="kpi-sub">Es lo que debe tener disponible</div>
+          </div>
+          <div>
+            <div class="kpi-label">Costo por unidad</div>
+            <div class="kpi-value">${usd2(r.costoUnitario)}</div>
+            <div class="kpi-sub">${cop(r.costoUnitarioCop)} a TRM ${Math.round(r.trm).toLocaleString('es-CO')}</div>
+          </div>
+          <div>
+            <div class="kpi-label">Sobrecosto sobre el FOB</div>
+            <div class="kpi-value ${r.sobrecostoPct > 50 ? '' : 'green'}">+${pct(r.sobrecostoPct)}</div>
+            <div class="kpi-sub">Lo que suma la operación al precio de fábrica</div>
+          </div>
+        </div>
+        <div style="margin-top:1.2rem">
+          <div class="bar">
+            <span class="b-cif"  style="width:${w(r.cif)}"></span>
+            <span class="b-trib" style="width:${w(r.tributos)}"></span>
+            <span class="b-loc"  style="width:${w(r.gastosLocales)}"></span>
+          </div>
+          <div class="legend">
+            <span><i style="background:var(--accent)"></i>Valor en aduana ${usd(r.cif)}</span>
+            <span><i style="background:var(--gold)"></i>Tributos ${usd(r.tributos)}</span>
+            <span><i style="background:var(--green)"></i>Gastos locales ${usd(r.gastosLocales)}</span>
+          </div>
+        </div>
+      </div>
+
+      ${avisos.map(a => `<div class="callout ${a.tipo}"><strong>${a.titulo}</strong>${a.texto}</div>`).join('')}
+
+      <div class="tablecard">
+        <h3>Desglose completo</h3>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Concepto</th><th class="num">USD</th><th class="num">COP</th><th class="num">% del total</th></tr></thead>
+          <tbody>
+            <tr class="group"><td colspan="4">Valor en aduana (base gravable)</td></tr>
+            <tr><td>Valor FOB de la mercancía</td><td class="num">${usd(r.fob)}</td><td class="num">${cop(r.fob * r.trm)}</td><td class="num">${w(r.fob)}</td></tr>
+            <tr><td>Flete internacional<span class="tdesc">${esc(r.estimacionFlete.unidades || 'cotización manual')}</span></td><td class="num">${usd(r.flete)}</td><td class="num">${cop(r.flete * r.trm)}</td><td class="num">${w(r.flete)}</td></tr>
+            <tr><td>Seguro de transporte (${pct(r.seguroPct)})</td><td class="num">${usd(r.seguro)}</td><td class="num">${cop(r.seguro * r.trm)}</td><td class="num">${w(r.seguro)}</td></tr>
+            <tr class="total"><td>Valor en aduana (CIF)</td><td class="num">${usd(r.cif)}</td><td class="num">${cop(r.cif * r.trm)}</td><td class="num">${w(r.cif)}</td></tr>
+
+            <tr class="group"><td colspan="4">Tributos aduaneros</td></tr>
+            <tr><td>Arancel (${pct(r.arancelPct)} sobre CIF)</td><td class="num">${usd(r.arancel)}</td><td class="num">${cop(r.arancel * r.trm)}</td><td class="num">${w(r.arancel)}</td></tr>
+            <tr><td>IVA (${pct(r.ivaPct)} sobre CIF + arancel)<span class="tdesc">Base gravable ${usd(r.baseIva)}</span></td><td class="num">${usd(r.iva)}</td><td class="num">${cop(r.iva * r.trm)}</td><td class="num">${w(r.iva)}</td></tr>
+            <tr class="total"><td>Total tributos</td><td class="num">${usd(r.tributos)}</td><td class="num">${cop(r.tributos * r.trm)}</td><td class="num">${w(r.tributos)}</td></tr>
+
+            <tr class="group"><td colspan="4">Gastos locales en Colombia</td></tr>
+            <tr><td>Gastos portuarios y de terminal<span class="tdesc">${esc(r.puerto.nombre)}</span></td><td class="num">${usd(r.gastosPuerto)}</td><td class="num">${cop(r.gastosPuerto * r.trm)}</td><td class="num">${w(r.gastosPuerto)}</td></tr>
+            <tr><td>Almacenaje</td><td class="num">${usd(r.almacenaje)}</td><td class="num">${cop(r.almacenaje * r.trm)}</td><td class="num">${w(r.almacenaje)}</td></tr>
+            <tr><td>Agenciamiento aduanero</td><td class="num">${usd(r.agenciamiento)}</td><td class="num">${cop(r.agenciamiento * r.trm)}</td><td class="num">${w(r.agenciamiento)}</td></tr>
+            <tr><td>Transporte interno a ${esc(DATA.ciudades.find(c => c.id === r.input.ciudadId).nombre)}</td><td class="num">${usd(r.transporteInterno)}</td><td class="num">${cop(r.transporteInterno * r.trm)}</td><td class="num">${w(r.transporteInterno)}</td></tr>
+            <tr><td>Gastos bancarios del giro al exterior</td><td class="num">${usd(r.gastosBancarios)}</td><td class="num">${cop(r.gastosBancarios * r.trm)}</td><td class="num">${w(r.gastosBancarios)}</td></tr>
+            <tr><td>GMF (4 x 1.000)</td><td class="num">${usd(r.gmf)}</td><td class="num">${cop(r.gmf * r.trm)}</td><td class="num">${w(r.gmf)}</td></tr>
+            <tr class="total"><td>Total gastos locales</td><td class="num">${usd(r.gastosLocales)}</td><td class="num">${cop(r.gastosLocales * r.trm)}</td><td class="num">${w(r.gastosLocales)}</td></tr>
+
+            <tr class="group"><td colspan="4">Resultado</td></tr>
+            <tr class="total"><td>Desembolso total</td><td class="num">${usd(r.desembolsoTotal)}</td><td class="num">${cop(r.desembolsoTotal * r.trm)}</td><td class="num">100%</td></tr>
+            ${r.ivaRecuperable > 0 ? `<tr class="sub"><td>Menos IVA descontable</td><td class="num">−${usd(r.ivaRecuperable)}</td><td class="num">−${cop(r.ivaRecuperable * r.trm)}</td><td class="num">−${w(r.ivaRecuperable)}</td></tr>` : ''}
+            <tr class="total"><td>Costo real de la mercancía</td><td class="num">${usd(r.costoReal)}</td><td class="num">${cop(r.costoReal * r.trm)}</td><td class="num">${w(r.costoReal)}</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="tablecard">
+        <h3>Tiempos estimados</h3>
+        <div class="tablewrap"><table>
+          <tbody>
+            <tr><td>Tránsito internacional (${r.via})</td><td class="num">${r.transito[0]} a ${r.transito[1]} días</td></tr>
+            <tr><td>Nacionalización y levante</td><td class="num">${r.input.modalidad === 'courier' ? '1 a 3' : '3 a 8'} días</td></tr>
+            <tr class="total"><td>Desde el embarque hasta su bodega</td><td class="num">${r.totalDias[0]} a ${r.totalDias[1]} días</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    `;
+
+    renderPrecioVenta(r);
+  }
+
+  function renderPrecioVenta(r) {
+    const card = document.createElement('div');
+    card.className = 'callout info';
+    card.innerHTML = `<strong>Referencia de precio de venta</strong>
+      Con su costo unitario real de ${usd2(r.costoUnitario)} (${cop(r.costoUnitarioCop)}), para obtener un margen bruto del
+      30% debe vender a <strong>${cop(r.costoUnitarioCop / 0.7)}</strong> por unidad;
+      con 40%, a <strong>${cop(r.costoUnitarioCop / 0.6)}</strong>;
+      con 50%, a <strong>${cop(r.costoUnitarioCop / 0.5)}</strong>. Estos precios son antes de IVA al consumidor.`;
+    $('#resultados').appendChild(card);
+  }
+
+  /* ======================= COMPARADOR DE MODALIDADES ======================= */
+  function renderComparador() {
+    const inp = leerInput();
+    const c = CALC.comparar(inp);
+    const best = c.viables[0];
+    const equilibrio = CALC.equilibrioLclFcl(inp.origenId, inp.escenario, inp.puertoId, inp.ciudadId);
+
+    const filas = c.todos.map(r => {
+      const isBest = best && r.modalidadId === best.modalidadId;
+      const dif = best ? r.costoReal - best.costoReal : 0;
+      return `<tr class="${isBest ? 'best' : ''}">
+        <td>${esc(r.modalidadNombre)} ${isBest ? '<span class="badge best">Más barato</span>' : ''}
+          ${!r.viable ? `<span class="tdesc">No recomendada: ${esc(r.motivo)}</span>` : ''}</td>
+        <td class="num">${usd(r.flete)}</td>
+        <td class="num">${usd(r.tributos)}</td>
+        <td class="num">${usd(r.gastosLocales)}</td>
+        <td class="num"><strong>${usd(r.costoReal)}</strong></td>
+        <td class="num">${isBest ? '—' : '+' + usd(dif)}</td>
+        <td class="num">${r.totalDias[0]}–${r.totalDias[1]} d</td>
+      </tr>`;
+    }).join('');
+
+    const peor = c.viables[c.viables.length - 1];
+
+    $('#comparadorOut').innerHTML = `
+      ${best ? `<div class="callout good" style="margin-bottom:1rem">
+        <strong>Para este embarque, lo más barato es ${esc(best.modalidadNombre)}</strong>
+        Costo real ${usd(best.costoReal)}, es decir ${usd2(best.costoUnitario)} por unidad, con llegada estimada
+        entre ${best.totalDias[0]} y ${best.totalDias[1]} días desde el embarque.
+        ${peor && peor !== best ? `Frente a la alternativa viable más cara (${esc(peor.modalidadNombre)}) ahorra <strong>${usd(peor.costoReal - best.costoReal)}</strong>.` : ''}
+      </div>` : ''}
+
+      <div class="tablecard">
+        <h3>Comparación de modalidades · ${esc(CALC.getOrigen(inp.origenId).nombre)} → ${esc(CALC.getPuerto(inp.puertoId).nombre)}</h3>
+        <div class="tablewrap"><table>
+          <thead><tr>
+            <th>Modalidad</th><th class="num">Flete</th><th class="num">Tributos</th>
+            <th class="num">Gastos locales</th><th class="num">Costo real</th><th class="num">Diferencia</th><th class="num">Tiempo</th>
+          </tr></thead>
+          <tbody>${filas}</tbody>
+        </table></div>
+      </div>
+
+      <div class="callout info" style="margin-top:1rem">
+        <strong>Punto de equilibrio consolidado vs. contenedor completo</strong>
+        Para carga desde ${esc(CALC.getOrigen(inp.origenId).nombre)}, el flete de un contenedor de 20 pies empieza a ser
+        más barato que el consolidado a partir de aproximadamente <strong>${equilibrio ? equilibrio + ' m³' : '13 m³'}</strong>.
+        Por debajo de ese volumen use LCL; por encima, contenedor completo. Y si su carga es voluminosa pero liviana,
+        el 40 High Cube casi siempre gana en costo por metro cúbico.
+      </div>
+
+      <h3 class="sec-title">Cuándo usar cada modalidad</h3>
+      <div class="cards">
+        ${DATA.modalidades.map(m => `<div class="card">
+          <h4>${esc(m.nombre)}</h4>
+          <p><strong>${esc(m.rango)}</strong><br>${esc(m.mejorPara)}</p>
+        </div>`).join('')}
+      </div>
+    `;
+  }
+
+  /* ======================= COMPARADOR DE ORIGENES ======================= */
+  function renderOrigenes() {
+    const inp = leerInput();
+    const lista = CALC.compararOrigenes(inp);
+    const best = lista[0];
+
+    const filas = lista.map((r, i) => `<tr class="${i === 0 ? 'best' : ''}">
+      <td>${esc(r.origenNombre)}
+        ${r.tieneTLC ? '<span class="badge tlc">TLC</span>' : '<span class="badge notlc">Sin acuerdo</span>'}
+        <span class="tdesc">Entrada por ${esc(r.puerto.nombre)}</span></td>
+      <td class="num">${usd(r.flete)}</td>
+      <td class="num">${pct(r.arancelPct)}</td>
+      <td class="num">${usd(r.tributos)}</td>
+      <td class="num"><strong>${usd(r.costoReal)}</strong></td>
+      <td class="num">${i === 0 ? '—' : '+' + usd(r.costoReal - best.costoReal)}</td>
+      <td class="num">${r.totalDias[0]}–${r.totalDias[1]} d</td>
+    </tr>`).join('');
+
+    // ¿Cuánto más caro puede ser el FOB en el origen con TLC y aun así convenir?
+    const china = lista.find(r => r.input.origenId === 'china') || lista.find(r => !r.tieneTLC);
+    const mejorTLC = lista.find(r => r.tieneTLC);
+    let insight = '';
+    if (china && mejorTLC && china !== mejorTLC && china.costoReal > mejorTLC.costoReal) {
+      const holgura = china.costoReal - mejorTLC.costoReal;
+      const holguraPct = (holgura / CALC.num(inp.fob)) * 100;
+      insight = `<div class="callout warn" style="margin-top:1rem">
+        <strong>El número que debe llevar a la mesa de negociación</strong>
+        Traer este mismo pedido desde ${esc(mejorTLC.origenNombre)} sale ${usd(holgura)} más barato que desde ${esc(china.origenNombre)}.
+        Eso significa que un proveedor en ${esc(mejorTLC.origenNombre)} puede cotizarle hasta un
+        <strong>${pct(holguraPct)} más caro de precio de fábrica</strong> y usted seguiría llegando igual o mejor a su bodega.
+        Cuando compare cotizaciones internacionales, nunca compare precios FOB: compare costo desembarcado.
+      </div>`;
+    }
+
+    $('#origenesOut').innerHTML = `
+      <div class="callout good">
+        <strong>El origen más económico para este embarque es ${esc(best.origenNombre)}</strong>
+        Costo real ${usd(best.costoReal)} contra ${usd(lista[lista.length - 1].costoReal)} del más caro
+        (${esc(lista[lista.length - 1].origenNombre)}): una diferencia de
+        ${usd(lista[lista.length - 1].costoReal - best.costoReal)} por el mismo producto.
+      </div>
+
+      <div class="tablecard" style="margin-top:1rem">
+        <h3>Mismo pedido, distintos orígenes · ${esc(DATA.modalidades.find(m => m.id === inp.modalidad).nombre)}</h3>
+        <div class="tablewrap"><table>
+          <thead><tr>
+            <th>Origen</th><th class="num">Flete</th><th class="num">Arancel</th>
+            <th class="num">Tributos</th><th class="num">Costo real</th><th class="num">Diferencia</th><th class="num">Tiempo</th>
+          </tr></thead>
+          <tbody>${filas}</tbody>
+        </table></div>
+      </div>
+
+      ${insight}
+
+      <h3 class="sec-title">Acuerdos comerciales vigentes de Colombia</h3>
+      <div class="cards">
+        ${DATA.origenes.map(o => `<div class="card">
+          <h4>${esc(o.nombre)} ${o.arancelPref === 0 ? '<span class="badge tlc">Arancel 0%</span>' : '<span class="badge notlc">NMF pleno</span>'}</h4>
+          <p>${o.tlc ? '<strong>' + esc(o.tlc) + '</strong><br>' : ''}${esc(o.nota)}
+          <br><br><span style="color:var(--text-faint)">Puertos de salida: ${esc(o.puertosOrigen)}.
+          Tránsito marítimo ${o.transito.maritimo[0]}–${o.transito.maritimo[1]} días, aéreo ${o.transito.aereo[0]}–${o.transito.aereo[1]} días.</span></p>
+        </div>`).join('')}
+      </div>
+    `;
+  }
+
+  /* ======================= PASOS ======================= */
+  function renderPasos(pasos, contenedor) {
+    $(contenedor).innerHTML = `<div class="steps">${pasos.map((p, i) => `
+      <details class="step" ${i === 0 ? 'open' : ''}>
+        <summary class="step-head">
+          <span class="step-n">${p.n}</span>
+          <span class="step-title">
+            <h4>${esc(p.titulo)}</h4>
+            <span class="step-meta">${esc(p.cuando)}${p.dias && p.dias !== '—' ? ' · duración típica ' + esc(p.dias) : ''}</span>
+          </span>
+          <span class="chev">▸</span>
+        </summary>
+        <div class="step-body">
+          <ul>${p.acciones.map(a => `<li>${esc(a)}</li>`).join('')}</ul>
+          <div class="callout info"><strong>Consejo de negociador</strong>${esc(p.tip)}</div>
+        </div>
+      </details>`).join('')}</div>`;
+  }
+
+  /* ======================= CUANDO ======================= */
+  function renderCuando() {
+    $('#cuandoOut').innerHTML = `
+      <div class="calgrid">
+        ${DATA.calendario.map(c => `<div class="calcard ${c.tipo}">
+          <div class="calmes">${esc(c.mes)}</div>
+          <h4>${esc(c.titulo)}</h4>
+          <p>${esc(c.detalle)}</p>
+        </div>`).join('')}
+      </div>
+
+      <h3 class="sec-title">Plazos que debe tener en la cabeza</h3>
+      <div class="tablecard">
+        <div class="tablewrap"><table>
+          <thead><tr><th>Concepto</th><th>Plazo</th><th>Detalle</th></tr></thead>
+          <tbody>${DATA.reglaTiempo.map(t => `<tr>
+            <td><strong>${esc(t.concepto)}</strong></td>
+            <td><strong style="color:var(--accent)">${esc(t.valor)}</strong></td>
+            <td style="color:var(--text-dim)">${esc(t.detalle)}</td>
+          </tr>`).join('')}</tbody>
+        </table></div>
+      </div>
+
+      <div class="callout bad" style="margin-top:1rem">
+        <strong>La regla que no puede olvidar</strong>
+        Si la mercancía permanece en depósito más allá del término legal sin que se presente la declaración de importación,
+        cae en <strong>abandono a favor de la Nación</strong>: usted pierde la mercancía y además ya pagó el flete.
+        Es el error más caro y más evitable del comercio exterior colombiano. Presente declaración anticipada y no dependa de que
+        alguien se acuerde.
+      </div>
+    `;
+  }
+
+  /* ======================= AGENTES ======================= */
+  function renderAgentes() {
+    const ranked = DATA.agencias.filter(a => a.rank).sort((a, b) => a.rank - b.rank);
+    const otras = DATA.agencias.filter(a => !a.rank);
+
+    const fila = (a) => `<tr>
+      <td>${a.rank ? `<span class="badge rank">#${a.rank}</span> ` : ''}<strong>${esc(a.nombre)}</strong>
+        ${a.nivel === 1 ? '<span class="badge n1">Nivel 1</span>' : ''}
+        <span class="tdesc">${esc(a.tipo)}</span></td>
+      <td>${esc(a.fuerte)}</td>
+      <td style="color:var(--text-dim)">${esc(a.perfil)}</td>
+    </tr>`;
+
+    $('#agentesOut').innerHTML = `
+      <div class="callout info">
+        <strong>Cómo leer este listado</strong>
+        El orden corresponde al ranking sectorial 2026 de agencias de aduanas en Colombia, que se construye principalmente sobre
+        volumen de operación e ingresos. Un puesto alto indica músculo y experiencia, no necesariamente que sea la mejor opción
+        <em>para usted</em>: una agencia mediana especializada en su producto puede darle mejor servicio que la número uno del país.
+        Cotice siempre con tres y verifique la habilitación vigente en el registro aduanero de la DIAN antes de firmar mandato.
+      </div>
+
+      <div class="tablecard" style="margin-top:1rem">
+        <h3>Ranking sectorial de agencias de aduanas · Colombia 2026</h3>
+        <div class="tablewrap"><table>
+          <thead><tr><th style="width:26%">Agencia</th><th style="width:42%">Fortaleza</th><th>Perfil de cliente que le calza</th></tr></thead>
+          <tbody>${ranked.map(fila).join('')}</tbody>
+        </table></div>
+      </div>
+
+      <div class="tablecard" style="margin-top:1rem">
+        <h3>Otros operadores relevantes del mercado</h3>
+        <div class="tablewrap"><table>
+          <thead><tr><th style="width:26%">Operador</th><th style="width:42%">Fortaleza</th><th>Perfil de cliente que le calza</th></tr></thead>
+          <tbody>${otras.map(fila).join('')}</tbody>
+        </table></div>
+      </div>
+
+      <h3 class="sec-title">Los ocho criterios para elegir</h3>
+      <div class="cards">
+        ${DATA.criteriosAgencia.map((c, i) => `<div class="card">
+          <h4>${i + 1}. ${esc(c.titulo)}</h4>
+          <p>${esc(c.detalle)}</p>
+        </div>`).join('')}
+      </div>
+
+      <h3 class="sec-title">Señales de alerta: aléjese si ve esto</h3>
+      <div class="callout bad">
+        <strong>Motivos para no firmar</strong>
+        <ul style="margin:.5rem 0 0; padding-left:1.1rem">
+          ${DATA.senalesAlerta.map(s => `<li style="margin-bottom:.3rem">${esc(s)}</li>`).join('')}
+        </ul>
+      </div>
+
+      <h3 class="sec-title">Qué pedir en la cotización</h3>
+      <div class="tablecard">
+        <div class="tablewrap"><table>
+          <thead><tr><th>Rubro</th><th>Qué debe exigir</th><th class="num">Rango de mercado</th></tr></thead>
+          <tbody>
+            <tr><td>Honorarios de agenciamiento</td><td>Porcentaje sobre el valor CIF, con mínimo y máximo pactados por escrito</td><td class="num">0,4% a 1,0% · mín. USD 150–250</td></tr>
+            <tr><td>Gastos operativos</td><td>Tarifa fija por declaración, no variable</td><td class="num">USD 60 a 150</td></tr>
+            <tr><td>Manejo documental</td><td>Incluido o con tope</td><td class="num">USD 30 a 80</td></tr>
+            <tr><td>Acompañamiento en inspección</td><td>Se cobra solo si ocurre</td><td class="num">USD 80 a 200</td></tr>
+            <tr><td>Reembolsables (puerto, naviera)</td><td>A costo, con factura del tercero. Sin margen oculto</td><td class="num">Según terminal</td></tr>
+            <tr><td>Transporte interno</td><td>Cotizado aparte para poder comparar con transportadores directos</td><td class="num">Según ruta</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    `;
+  }
+
+  /* ======================= AHORRO ======================= */
+  function renderAhorro() {
+    $('#ahorroOut').innerHTML = `
+      <div class="tablecard">
+        <div class="tablewrap"><table>
+          <thead><tr><th style="width:20%">Estrategia</th><th style="width:15%">Ahorro típico</th><th>Cómo se hace</th><th class="num">Dificultad</th></tr></thead>
+          <tbody>${DATA.estrategias.map(e => `<tr>
+            <td><strong>${esc(e.titulo)}</strong></td>
+            <td><strong style="color:var(--green)">${esc(e.ahorro)}</strong></td>
+            <td style="color:var(--text-dim)">${esc(e.detalle)}</td>
+            <td class="num">${esc(e.dificultad)}</td>
+          </tr>`).join('')}</tbody>
+        </table></div>
+      </div>
+
+      <div class="callout good" style="margin-top:1rem">
+        <strong>Si solo va a hacer tres cosas, que sean estas</strong>
+        Primero, compre FOB y contrate usted el flete. Segundo, exija el certificado de origen cuando el país tenga acuerdo
+        comercial con Colombia. Tercero, verifique la clasificación arancelaria antes de cerrar la compra, no cuando la carga
+        ya esté en el puerto. Esas tres decisiones, juntas, suelen valer entre el 15% y el 30% del costo de la operación,
+        y ninguna requiere capital adicional.
+      </div>
+    `;
+  }
+
+  /* ======================= EXPORTACION ======================= */
+  function renderExp() {
+    const r = CALC.costearExportacion({
+      costoProducto: $('#e_costo').value,
+      cantidad: $('#e_cant').value,
+      margenPct: $('#e_margen').value,
+      empaque: $('#e_empaque').value,
+      transporteInterno: $('#e_transp').value,
+      gastosPuerto: $('#e_puerto').value,
+      agenciamiento: $('#e_agencia').value,
+      certificados: $('#e_cert').value,
+      fleteInternacional: $('#e_flete').value,
+      seguroPct: $('#e_seguro').value,
+      financieroPct: $('#e_fin').value
+    });
+
+    $('#expResultados').innerHTML = `
+      <div class="headline">
+        <div class="headline-grid">
+          <div><div class="kpi-label">Precio FOB total</div><div class="kpi-value big accent">${usd(r.fob)}</div><div class="kpi-sub">${usd2(r.fobUnitario)} por unidad</div></div>
+          <div><div class="kpi-label">Precio CIF total</div><div class="kpi-value">${usd(r.cif)}</div><div class="kpi-sub">${usd2(r.cifUnitario)} por unidad</div></div>
+          <div><div class="kpi-label">Utilidad incluida</div><div class="kpi-value green">${usd(r.utilidad)}</div><div class="kpi-sub">Margen del ${pct(r.margenPct)}</div></div>
+        </div>
+      </div>
+
+      <div class="tablecard">
+        <h3>Construcción del precio de exportación</h3>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Concepto</th><th class="num">USD</th></tr></thead>
+          <tbody>
+            <tr><td>Costo del producto</td><td class="num">${usd(r.costoProducto)}</td></tr>
+            <tr><td>Empaque y embalaje de exportación</td><td class="num">${usd(r.empaque)}</td></tr>
+            <tr><td>Utilidad (${pct(r.margenPct)})</td><td class="num">${usd(r.utilidad)}</td></tr>
+            <tr class="total"><td>Precio EXW — en su planta</td><td class="num">${usd(r.exw)}</td></tr>
+            <tr><td>Transporte interno hasta el puerto</td><td class="num">${usd(r.transporteInt)}</td></tr>
+            <tr><td>Gastos portuarios de origen</td><td class="num">${usd(r.gastosPuerto)}</td></tr>
+            <tr><td>Agenciamiento aduanero de exportación</td><td class="num">${usd(r.agenciamiento)}</td></tr>
+            <tr><td>Certificados y vistos buenos</td><td class="num">${usd(r.certificados)}</td></tr>
+            <tr class="total"><td>Precio FCA — entregado al transportador</td><td class="num">${usd(r.fca)}</td></tr>
+            <tr><td>Costo financiero y bancario</td><td class="num">${usd(r.financiero)}</td></tr>
+            <tr class="total"><td>Precio FOB — a bordo del buque</td><td class="num">${usd(r.fob)}</td></tr>
+            <tr><td>Flete internacional</td><td class="num">${usd(r.fleteInt)}</td></tr>
+            <tr class="total"><td>Precio CFR</td><td class="num">${usd(r.cfr)}</td></tr>
+            <tr><td>Seguro internacional</td><td class="num">${usd(r.seguro)}</td></tr>
+            <tr class="total"><td>Precio CIF — puerto de destino</td><td class="num">${usd(r.cif)}</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="callout ${r.requiereAgencia ? 'warn' : 'info'}">
+        <strong>${r.requiereAgencia ? 'Requiere agencia de aduanas' : 'Puede tramitarlo usted mismo'}</strong>
+        ${r.requiereAgencia
+          ? `Con un FOB de ${usd(r.fob)}, por encima del umbral de USD ${DATA.parametros.dexUmbralAgencia.toLocaleString('es-CO')} debe actuar a través de una agencia de aduanas habilitada.`
+          : `Con un FOB de ${usd(r.fob)}, por debajo del umbral de USD ${DATA.parametros.dexUmbralAgencia.toLocaleString('es-CO')} usted puede presentar la Solicitud de Autorización de Embarque directamente en MUISCA sin agencia de aduanas.`}
+      </div>
+
+      <div class="callout good">
+        <strong>Recuerde su beneficio tributario</strong>
+        Las exportaciones están exentas de IVA con derecho a devolución. Todo el IVA que usted pagó en los insumos de estas
+        ${r.cantidad.toLocaleString('es-CO')} unidades es recuperable ante la DIAN. Ese es el margen que muchos exportadores
+        primerizos dejan perder por no llevar el expediente completo del DEX.
+      </div>
+    `;
+  }
+
+  /* ======================= FUENTES ======================= */
+  function renderFuentes() {
+    $('#fuentesOut').innerHTML = `<h3>Fuentes oficiales y de consulta</h3><ul>
+      ${DATA.fuentes.map(f => `<li><a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.nombre)}</a></li>`).join('')}
+    </ul>`;
+  }
+
+  /* ======================= ARRANQUE ======================= */
+  $('#formExp').addEventListener('input', renderExp);
+
+  syncOrigen();
+  syncCategoria();
+  render();
+  renderPasos(DATA.pasosImportacion, '#importarOut');
+  renderPasos(DATA.pasosExportacion, '#exportarOut');
+  renderCuando();
+  renderAgentes();
+  renderAhorro();
+  renderExp();
+  renderFuentes();
+})();
+
+</script>
