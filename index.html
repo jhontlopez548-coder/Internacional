@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ImportaCol — Guía y simulador de comercio exterior para Colombia</title>
+<meta name="description" content="Simulador de costos de importación, comparador de modalidades y orígenes, directorio de agencias de aduana y guías paso a paso de importación y exportación en Colombia.">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">CO</span>
+      <div>
+        <strong>ImportaCol</strong>
+        <span class="brand-sub">Comercio exterior Colombia · simulador y guía operativa</span>
+      </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema" aria-label="Cambiar tema">◐</button>
+  </div>
+  <nav class="tabs wrap" id="tabs">
+    <button class="tab active" data-view="simulador">Simulador de costos</button>
+    <button class="tab" data-view="comparador">¿Cuál es más barato?</button>
+    <button class="tab" data-view="origenes">¿De dónde traerlo?</button>
+    <button class="tab" data-view="importar">Cómo importar</button>
+    <button class="tab" data-view="exportar">Cómo exportar</button>
+    <button class="tab" data-view="cuando">Cuándo hacerlo</button>
+    <button class="tab" data-view="agentes">Agentes de aduana</button>
+    <button class="tab" data-view="ahorro">Cómo pagar menos</button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- =============== SIMULADOR =============== -->
+  <section class="view active" id="view-simulador">
+    <div class="view-head">
+      <h1>Simulador de costo desembarcado</h1>
+      <p>Calcula lo que realmente le cuesta poner la mercancía en su bodega en Colombia: valor en aduana, arancel, IVA, gastos portuarios, agenciamiento y transporte interno.</p>
+    </div>
+
+    <div class="layout">
+      <form class="panel form" id="formSim">
+        <h3>Datos de la operación</h3>
+
+        <div class="field">
+          <label for="fob">Valor FOB de la mercancía (USD)</label>
+          <input type="number" id="fob" value="25000" min="0" step="100">
+          <small>Precio de fábrica puesto a bordo, sin flete ni seguro.</small>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="cantidad">Cantidad de unidades</label>
+            <input type="number" id="cantidad" value="1000" min="1" step="1">
+          </div>
+          <div class="field">
+            <label for="trm">TRM (COP por USD)</label>
+            <input type="number" id="trm" value="4050" min="1" step="10">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="pesoKg">Peso bruto total (kg)</label>
+            <input type="number" id="pesoKg" value="4500" min="0" step="10">
+          </div>
+          <div class="field">
+            <label for="volumenCbm">Volumen total (m³ / CBM)</label>
+            <input type="number" id="volumenCbm" value="22" min="0" step="0.5">
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="field">
+          <label for="origenId">País de origen</label>
+          <select id="origenId"></select>
+          <small id="origenNota" class="note-inline"></small>
+        </div>
+
+        <div class="field">
+          <label for="modalidad">Modalidad de transporte</label>
+          <select id="modalidad"></select>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="puertoId">Puerto / punto de entrada</label>
+            <select id="puertoId"></select>
+          </div>
+          <div class="field">
+            <label for="ciudadId">Ciudad de destino final</label>
+            <select id="ciudadId"></select>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="field">
+          <label for="categoriaId">Categoría del producto</label>
+          <select id="categoriaId"></select>
+          <small id="catNota" class="note-inline"></small>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="arancelPct">Arancel (%)</label>
+            <input type="number" id="arancelPct" value="10" min="0" max="100" step="0.5">
+          </div>
+          <div class="field">
+            <label for="ivaPct">IVA (%)</label>
+            <input type="number" id="ivaPct" value="19" min="0" max="100" step="0.5">
+          </div>
+        </div>
+
+        <label class="check" id="tlcWrap">
+          <input type="checkbox" id="aplicaTLC">
+          <span>Aplicar preferencia arancelaria del acuerdo comercial <em id="tlcLabel"></em></span>
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="responsableIva" checked>
+          <span>Soy responsable de IVA (el IVA de la nacionalización es descontable)</span>
+        </label>
+
+        <hr>
+
+        <details class="adv">
+          <summary>Parámetros avanzados</summary>
+          <div class="field">
+            <label for="escenario">Escenario de tarifas</label>
+            <select id="escenario">
+              <option value="bajo">Optimista — extremo bajo del mercado</option>
+              <option value="medio" selected>Realista — promedio de mercado</option>
+              <option value="alto">Conservador — extremo alto del mercado</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="fleteManual">Flete real cotizado (USD)</label>
+              <input type="number" id="fleteManual" placeholder="Dejar vacío para estimar" min="0" step="50">
+            </div>
+            <div class="field">
+              <label for="seguroPct">Seguro (% sobre FOB+flete)</label>
+              <input type="number" id="seguroPct" value="0.5" min="0" step="0.05">
+            </div>
+          </div>
+          <div class="field">
+            <label for="diasAlmacenaje">Días totales en puerto antes de retirar</label>
+            <input type="number" id="diasAlmacenaje" value="7" min="0" step="1">
+            <small>Los primeros días son libres. Solo se cobra el exceso.</small>
+          </div>
+        </details>
+      </form>
+
+      <div class="results" id="resultados"></div>
+    </div>
+  </section>
+
+  <!-- =============== COMPARADOR MODALIDADES =============== -->
+  <section class="view" id="view-comparador">
+    <div class="view-head">
+      <h1>¿Cuál es la forma más barata de traerla?</h1>
+      <p>Toma los datos que cargó en el simulador y corre el mismo embarque por courier, aéreo, consolidado marítimo y contenedor completo. Lo ordena de más barato a más caro.</p>
+    </div>
+    <div id="comparadorOut"></div>
+  </section>
+
+  <!-- =============== COMPARADOR ORIGENES =============== -->
+  <section class="view" id="view-origenes">
+    <div class="view-head">
+      <h1>¿De qué país conviene traerla?</h1>
+      <p>Mismo producto, mismo volumen, distintos orígenes. Aquí es donde se ve el efecto real de los acuerdos comerciales: un arancel eliminado puede compensar un precio de fábrica más alto.</p>
+    </div>
+    <div id="origenesOut"></div>
+  </section>
+
+  <!-- =============== IMPORTAR =============== -->
+  <section class="view" id="view-importar">
+    <div class="view-head">
+      <h1>Cómo importar a Colombia, paso a paso</h1>
+      <p>El recorrido completo desde el registro ante la DIAN hasta el cierre del expediente, con los plazos reales de cada etapa.</p>
+    </div>
+    <div id="importarOut"></div>
+  </section>
+
+  <!-- =============== EXPORTAR =============== -->
+  <section class="view" id="view-exportar">
+    <div class="view-head">
+      <h1>Cómo exportar desde Colombia, paso a paso</h1>
+      <p>Trámite ante DIAN y VUCE, certificado de origen, SAE y DEX, reintegro de divisas y los beneficios tributarios que le corresponden como exportador.</p>
+    </div>
+    <div id="exportarOut"></div>
+
+    <div class="view-head" style="margin-top:2.5rem">
+      <h2>Calculadora de precio de exportación</h2>
+      <p>Construye el precio FOB y CIF a partir de su costo de producción, para que cotice sin dejar costos por fuera.</p>
+    </div>
+    <div class="layout">
+      <form class="panel form" id="formExp">
+        <h3>Estructura de costos</h3>
+        <div class="row">
+          <div class="field"><label for="e_costo">Costo total del producto (USD)</label><input type="number" id="e_costo" value="12000" step="100"></div>
+          <div class="field"><label for="e_cant">Unidades</label><input type="number" id="e_cant" value="500" step="1"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="e_margen">Margen deseado (%)</label><input type="number" id="e_margen" value="28" step="1"></div>
+          <div class="field"><label for="e_empaque">Empaque de exportación (USD)</label><input type="number" id="e_empaque" value="600" step="50"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="e_transp">Transporte interno a puerto (USD)</label><input type="number" id="e_transp" value="700" step="50"></div>
+          <div class="field"><label for="e_puerto">Gastos portuarios origen (USD)</label><input type="number" id="e_puerto" value="380" step="20"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="e_agencia">Agenciamiento aduanero (USD)</label><input type="number" id="e_agencia" value="250" step="20"></div>
+          <div class="field"><label for="e_cert">Certificados y vistos buenos (USD)</label><input type="number" id="e_cert" value="150" step="10"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="e_flete">Flete internacional (USD)</label><input type="number" id="e_flete" value="2200" step="50"></div>
+          <div class="field"><label for="e_seguro">Seguro (%)</label><input type="number" id="e_seguro" value="0.4" step="0.05"></div>
+        </div>
+        <div class="field"><label for="e_fin">Costo financiero y bancario (%)</label><input type="number" id="e_fin" value="1.5" step="0.1"></div>
+      </form>
+      <div class="results" id="expResultados"></div>
+    </div>
+  </section>
+
+  <!-- =============== CUANDO =============== -->
+  <section class="view" id="view-cuando">
+    <div class="view-head">
+      <h1>Cuándo comprar y cuándo embarcar</h1>
+      <p>El calendario del comercio exterior. Comprar el mismo contenedor en marzo o en septiembre puede cambiar el flete en más de un 40%.</p>
+    </div>
+    <div id="cuandoOut"></div>
+  </section>
+
+  <!-- =============== AGENTES =============== -->
+  <section class="view" id="view-agentes">
+    <div class="view-head">
+      <h1>Agencias de aduana y operadores logísticos</h1>
+      <p>Quién es quién en el mercado colombiano, cómo elegir y qué señales indican que debe alejarse.</p>
+    </div>
+    <div id="agentesOut"></div>
+  </section>
+
+  <!-- =============== AHORRO =============== -->
+  <section class="view" id="view-ahorro">
+    <div class="view-head">
+      <h1>Catorce formas de bajar el costo de su importación</h1>
+      <p>Ordenadas por lo que realmente mueven la aguja. La primera columna es el ahorro típico sobre la operación.</p>
+    </div>
+    <div id="ahorroOut"></div>
+  </section>
+
+</main>
+
+<footer class="foot wrap">
+  <div id="fuentesOut"></div>
+  <p class="disclaimer"><strong>Aviso.</strong> Las cifras de esta herramienta son rangos referenciales de mercado a 2026 y sirven para presupuestar y comparar alternativas. No constituyen una cotización en firme ni asesoría legal o tributaria. Antes de cerrar una operación confirme la subpartida arancelaria, los vistos buenos y las tarifas vigentes con la DIAN, la VUCE y su agencia de aduanas.</p>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/calculadora.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
